@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  scraper:
+    restart: always
+    build: ./scraper
+    ports:
+      - '8888:8888'

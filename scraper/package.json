@@ -5,7 +5,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc --project ./",
-    "start": "tsc --project ./ && node ./index.js"
+    "start": "tsc --project ./ && node ./build/index.js"
   },
   "keywords": [],
   "author": "",

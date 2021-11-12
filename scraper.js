@@ -2,7 +2,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-// base url of the websites to scrape data from
 const BASE_URL = 'http://www.arabalar.com.tr';
 
 const ARABALAR_BRANDS_URL = 'http://www.arabalar.com.tr/araba-fiyatlari';
@@ -12,14 +11,11 @@ const ARABALAR_BRANDS_CHILD2 = 'h2';
 const ARABALAR_BRANDS_CHILD3 = 'a';
 const ARABALAR_BRANDS_ATTRIBUTE = 'href';
 
-// constants for selecting series
-const CAR_BRANDS = ['/bmw', '/hyundai', '/citroen', '/ford'];
 const ARABALAR_SERIES_SELECTOR = '#models .model';
 const ARABALAR_SERIES_CHILD1 = '.modelthumb';
 const ARABALAR_SERIES_CHILD2 = 'a';
 const ARABALAR_SERIES_ATTRIBUTE = 'href';
 
-// constants for selecting models
 const ARABALAR_MODELS_SELECTOR = '#0km ul li';
 const ARABALAR_CHILD_MODEL = 'a';
 const ARABALAR_CHILD_PRICE = 'span';
@@ -37,7 +33,6 @@ async function findBrandHref(url, selector, child1, child2, child3, attribute) {
   } catch (err) {
     console.error(err);
   }
-  // console.log(brandHrefs);
   return brandHrefs;
 };
 

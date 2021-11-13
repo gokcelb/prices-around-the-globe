@@ -1,26 +1,30 @@
 import * as cheerio from 'cheerio';
-import { children } from 'cheerio/lib/api/traversing';
-
 import HttpClient from "./client";
 
-export default class Scraper<T> {
-    private readonly httpClient: HttpClient;
+export class ScraperFactory {
+    createAttrScraper(baseURL: string, attribute: string): AttrScraper {
+        const httpClient = new HttpClient(baseURL);
+        return new AttrScraper(httpClient).attr(attribute);
+    }
 
-    private selectors: string[] = [];
-    private children: string[] = [];
-    private attribute: string = '';
+    createTextScraper(baseURL: string): TextScraper {
+        const httpClient = new HttpClient(baseURL);
+        return new TextScraper(httpClient);
+    }
+}
 
-    private constructor(httpClient: HttpClient) {
+export abstract class Scraper<T> {
+    protected readonly httpClient: HttpClient;
+
+    protected selector: string = '';
+    protected children: string[] = [];
+
+    constructor(httpClient: HttpClient) {
         this.httpClient = httpClient;
     }
 
-    static create<T>(baseURL: string): Scraper<T> {
-        const httpClient = new HttpClient(baseURL);
-        return new Scraper<T>(httpClient);
-    }
-
     select(selector: string): Scraper<T> {
-        this.selectors.push(selector);
+        this.selector = selector;
         return this;
     }
 
@@ -31,27 +35,50 @@ export default class Scraper<T> {
         return this;
     }
 
-    attr(attribute: string): Scraper<T> {
+    abstract scrape(path?: string): Promise<T[]>;
+
+    protected findChildren($: cheerio.Cheerio<cheerio.Node>): cheerio.Cheerio<cheerio.Node> {
+        this.children.forEach(child => $ = $.children(child));
+        return $;
+    }
+}
+
+export class AttrScraper extends Scraper<string> {
+    private attribute: string = '';
+
+    attr(attribute: string): AttrScraper {
         this.attribute = attribute;
         return this;
     }
 
     async scrape(path?: string): Promise<string[]> {
-        const scrapeResult: string[] = [];
-        const rawHTML = await this.httpClient.get();
+        const attrResult: string[] = [];
+        const rawHTML = await this.httpClient.get(path);
         const $ = cheerio.load(rawHTML);
 
-        const items = $(this.selectors[0]);
+        const items = $(this.selector);
         items.each((_, element) => {
             const result = this.findChildren($(element)).attr(this.attribute);
-            if (result) scrapeResult.push(result);
+            if (result) attrResult.push(result);
         });
 
-        return scrapeResult;
+        return attrResult;
     }
+}
 
-    private findChildren($: cheerio.Cheerio<cheerio.Node>): cheerio.Cheerio<cheerio.Node> {
-        this.children.forEach(child => $ = $.children(child));
-        return $;
+export class TextScraper extends Scraper<string> {
+    async scrape(path?: string): Promise<string[]> {
+        const textResult: string[] = [];
+        const rawHTML = await this.httpClient.get(path);
+        const $ = cheerio.load(rawHTML);
+
+        const items = $(this.selector);
+        items.each((_, element) => {
+            const result = this.findChildren($(element)).text();
+            if (result) textResult.push(result);
+        });
+
+        return textResult;
     }
+    
 }

@@ -1,4 +1,4 @@
-import { ScraperFactory } from "./scraper"
+import { ScraperFactory, TextScraper } from "./scraper"
 
 const BASE_URL = 'http://www.arabalar.com.tr';
 
@@ -25,7 +25,11 @@ async function main(): Promise<void> {
     const arabalarBrandsAttribute = 'href';
     const autopolisBaseURL = 'https://www.autopolis.lu/fr/vehicules-neufs/en-stock?gclid=CjwKCAiAm7OMBhAQEiwArvGi3K8vltr60JAp_z2cUeo_SUqwXdVH5oYAuQ9p2tFgUacQCinMr_1ZcxoCYnMQAvD_BwE';
     const autopolisCarSelector = '.search-car__results div a';
-    const autopolisCarChildren = ['.row', '.result__details', '.result__name', '.result__brand'];
+    const autopolisCarChildrenBrand = ['.row', '.result__details', '.result__name', '.result__brand'];
+    const autopolisCarChildrenModel = ['.row', '.result__details', '.result__name', '.result__range'];
+    const autopolisCarChildrenCharacteristics = ['.row', '.result__details', '.result__characteristics', '.result__model'];
+    const autopolisCarChildrenPrice = ['.row', '.result__prices', '.result__price', 'strong'];
+    const autopolisCarChildrenCurrency = ['.row', '.result__prices', '.result__price', 'span'];
 
     const factory = new ScraperFactory();
     const hrefs = await factory.createAttrScraper(arabalarBaseURL, arabalarBrandsAttribute)
@@ -33,13 +37,17 @@ async function main(): Promise<void> {
         .child(...arabalarBrandsChildren)
         .scrape();
 
-    const brands = await factory.createTextScraper(autopolisBaseURL)
-        .select(autopolisCarSelector)
-        .child(...autopolisCarChildren)
+    const cars = await (factory.createTextScraper(autopolisBaseURL)
+        .select(autopolisCarSelector) as TextScraper)
+        .branch(autopolisCarChildrenBrand, 'brand')
+        .branch(autopolisCarChildrenModel, 'model')
+        .branch(autopolisCarChildrenPrice, 'price')
+        .branch(autopolisCarChildrenCharacteristics, 'characteristics')
+        .branch(autopolisCarChildrenCurrency, 'currency')
         .scrape();
 
     console.log(hrefs);
-    console.log(brands);
+    console.log(cars);
 }
 
 main()

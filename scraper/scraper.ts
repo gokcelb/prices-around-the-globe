@@ -37,8 +37,8 @@ export abstract class Scraper<T> {
 
     abstract scrape(path?: string): Promise<T[]>;
 
-    protected findChildren($: cheerio.Cheerio<cheerio.Node>): cheerio.Cheerio<cheerio.Node> {
-        this.children.forEach(child => $ = $.children(child));
+    protected findChildren($: cheerio.Cheerio<cheerio.Node>, children: string[]): cheerio.Cheerio<cheerio.Node> {
+        children.forEach(child => $ = $.children(child));
         return $;
     }
 }
@@ -58,7 +58,7 @@ export class AttrScraper extends Scraper<string> {
 
         const items = $(this.selector);
         items.each((_, element) => {
-            const result = this.findChildren($(element)).attr(this.attribute);
+            const result = this.findChildren($(element), this.children).attr(this.attribute);
             if (result) attrResult.push(result);
         });
 
@@ -66,19 +66,40 @@ export class AttrScraper extends Scraper<string> {
     }
 }
 
-export class TextScraper extends Scraper<string> {
-    async scrape(path?: string): Promise<string[]> {
-        const textResult: string[] = [];
+interface Branch {
+    children: string[];
+    key: string;
+}
+
+export class TextScraper extends Scraper<object> {
+    private branches: Branch[] = [];
+
+    branch(children: string[], key: string): TextScraper {
+        this.branches.push({
+            children: children,
+            key: key
+        });
+        return this;
+    }
+
+    async scrape(path?: string): Promise<object[]> {
+        const result: object[] = [];
         const rawHTML = await this.httpClient.get(path);
         const $ = cheerio.load(rawHTML);
-
         const items = $(this.selector);
+
         items.each((_, element) => {
-            const result = this.findChildren($(element)).text();
-            if (result) textResult.push(result);
+            const loadedCheerio = $(element);
+            const object: any = {};
+
+            this.branches.forEach(branch => {
+                const value = this.findChildren(loadedCheerio, branch.children).text();
+                object[branch.key] = value;
+            });
+
+            result.push(object);
         });
 
-        return textResult;
+        return result;
     }
-    
 }

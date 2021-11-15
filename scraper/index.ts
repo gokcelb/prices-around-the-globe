@@ -1,4 +1,5 @@
 import { ScraperFactory, TextScraper } from "./scraper"
+import { PriceFormatter, DefaultFormatter, CurrencyFormatter } from './formatter'
 
 const BASE_URL = 'http://www.arabalar.com.tr';
 
@@ -48,6 +49,17 @@ async function main(): Promise<void> {
 
     console.log(hrefs);
     console.log(cars);
+    
+    const priceFormatter = new PriceFormatter();
+    console.log('29.990,00');
+    console.log(priceFormatter.format('29.990,30'));
+
+    const defaultFormatter = new DefaultFormatter();
+    console.log('\n\t\t\t\t\tJeep\n\t\t\t\t');
+    console.log(defaultFormatter.format('\n\t\t\t\t\tJeep\n\t\t\t\t'));
+    
+    const currencyFormatter = new CurrencyFormatter();
+    console.log(currencyFormatter.format('us', 'acronym'));    
 }
 
 main()

@@ -1,46 +1,120 @@
+export class FormatterFactory {
+  static get(formatter?: string): Formatter {
+    if (formatter === 'currency') {
+      return CurrencyFormatter.instance;
+    } else if (formatter === 'price') {
+      return PriceFormatter.instance;
+    } else if (formatter === 'object') {
+      return ObjectFormatter.instance;
+    }
+    return DefaultFormatter.instance;
+  }
+}
+
 interface Formatter {
-  format(text?: string, country?:string, currencyFormat?: string): any;
+  format(...info: any[]): any;
 }
 
 export class DefaultFormatter implements Formatter {
+  private static _instance: DefaultFormatter;
+
+  private constructor() { }
+
+  static get instance(): DefaultFormatter {
+    if (!this._instance) {
+      this._instance = new DefaultFormatter();
+    }
+    return this._instance;
+  }
+
   format(text: string): string {
     return text.trim();
   }
 }
 
 export class PriceFormatter implements Formatter {
+  private static _instance: PriceFormatter;
+
+  private constructor() { }
+
+  static get instance(): PriceFormatter {
+    if (!this._instance) {
+      this._instance = new PriceFormatter();
+    }
+    return this._instance;
+  }
+
   format(text: string): number {
     const newText = text.replace(',', '.');
     const lastDotIdx = newText.lastIndexOf('.');
     return this.deleteDotsUntilLast(newText, lastDotIdx);
   }
 
-  deleteDotsUntilLast(text:string, idx: number): number {
+  private deleteDotsUntilLast(text: string, idx: number): number {
     let formattedText: string = '';
     for (let i = 0; i < text.length; i++) {
       if (text[i] === '.' && i !== idx) {
         continue;
-      } else {
-        formattedText += text[i];
       }
+      formattedText += text[i];
     };
     return parseFloat(formattedText);
   }
 }
 
+interface CurrencyFormat {
+  symbol: string;
+  acronym: string;
+}
+
 export class CurrencyFormatter implements Formatter {
-  protected currencyDict: { [key: string]: { [key: string]: string } } = {
-    'tr': {'symbol': '₺', 'acronym': 'TRY'},
-    'us': {'symbol': '$', 'acronym': 'USD'},
-    'lu': {'symbol': '€', 'acronym': 'EUR'},
+  private static _instance: CurrencyFormatter;
+  protected currencyDict: Map<String, CurrencyFormat> = new Map([
+    ['TR', { symbol: '₺', acronym: 'TRY' }],
+    ['US', { symbol: '$', acronym: 'USD' }],
+    ['LU', { symbol: '€', acronym: 'EUR' }],
+  ]);
+
+  private constructor() { }
+
+  static get instance(): CurrencyFormatter {
+    if (!this._instance) {
+      this._instance = new CurrencyFormatter();
+    }
+    return this._instance;
   }
 
-  format(isoCode:string, currencyFormat: string): string {
-    return this.currencyDict[isoCode][currencyFormat];
+  format(key: string, isoCode: string, currencyFormat: 'symbol' | 'acronym' = 'symbol'): string {
+    const format = this.currencyDict.get(isoCode.toUpperCase());
+    if (format) {
+      return format[currencyFormat];
+    }
+    return '';
   }
 }
 
-// format(tr, symbol) => this.currency[tr][symbol] = ₺
+export class ObjectFormatter implements Formatter {
+  private static _instance: ObjectFormatter;
 
-// 40,300.53 USA
-// 25.250,03 EUR
+  private constructor() { }
+
+  static get instance(): ObjectFormatter {
+    if (!this._instance) {
+      this._instance = new ObjectFormatter();
+    }
+    return this._instance;
+  }
+
+  format(obj: any, isoCode: string): any {
+    const propertyNames = Object.getOwnPropertyNames(obj);
+    propertyNames.forEach(name => {
+      obj[name] = DefaultFormatter.instance.format(obj[name]);
+      if (name === 'price') {
+        obj[name] = PriceFormatter.instance.format(obj[name]);
+      } else if (name === 'currency') {
+        obj[name] = CurrencyFormatter.instance.format(obj[name], isoCode);
+      }
+    });
+    return obj;
+  }
+}

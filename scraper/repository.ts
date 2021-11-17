@@ -17,7 +17,9 @@ export interface ScrapeInformation {
   type: ScraperType;
   baseURL: string;
   selector: string;
-  query: Branch[];
+  queryText: Branch[];
+  queryAttr: string;
+  attr: string;
 }
 
 export class InMemoryScrapeInformationRepository implements Repository<ScrapeInformation> {

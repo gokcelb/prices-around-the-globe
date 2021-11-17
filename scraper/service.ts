@@ -12,11 +12,21 @@ export class ScraperService {
       this.scraperRepository = scraperRepository;
   }
 
-  async scrape(id: string, isoCode: string, currencyFormat: string) {
+  async scrapeAttr(id: string, attr: string) {
+    const scrapeInfo = await this.scraperRepository.get(id);
+    const attrScraper = await this.scraperFactory.createAttrScraper(scrapeInfo.baseURL, attr)
+      .select(scrapeInfo.selector)
+      .child(...scrapeInfo.queryAttr.split(' '))
+      .scrape();
+
+    return attrScraper;
+  }
+
+  async scrapeText(id: string, isoCode: string, currencyFormat: string) {
     const scrapeInfo = await this.scraperRepository.get(id);
     const textScraper = this.scraperFactory.createTextScraper(scrapeInfo.baseURL)
     .select(scrapeInfo.selector) as TextScraper;
-    scrapeInfo.query.forEach(branch => {
+    scrapeInfo.queryText.forEach(branch => {
         textScraper.branch(branch.children, branch.key);
     })
     const cars = await textScraper.scrape();

@@ -4,7 +4,7 @@
     "baseURL": "https://www.autopolis.lu/fr/vehicules-neufs/en-stock?gclid=CjwKCAiAm7OMBhAQEiwArvGi3K8vltr60JAp_z2cUeo_SUqwXdVH5oYAuQ9p2tFgUacQCinMr_1ZcxoCYnMQAvD_BwE",
     "selector": ".search-car__results div a",
     "type": "TEXT",
-    "query": [
+    "queryText": [
       {
         "children": [
           ".row",
@@ -51,5 +51,13 @@
         "key": "characteristics"
       }
     ]
+  },
+  {
+    "id": "arabalar-brands",
+    "baseURL": "http://www.arabalar.com.tr/araba-fiyatlari",
+    "selector": "#fiyatlar .marka",
+    "type": "ATTR",
+    "queryAttr": ".name h2 a",
+    "attr": "href"
   }
 ]

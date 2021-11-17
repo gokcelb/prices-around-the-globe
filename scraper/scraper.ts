@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio';
 import HttpClient from "./client";
 
 export class ScraperFactory {
+    // burada stringle ollustrma yapmak lazim formatterdaki gibi
     createAttrScraper(baseURL: string, attribute: string): AttrScraper {
         const httpClient = new HttpClient(baseURL);
         return new AttrScraper(httpClient).attr(attribute);

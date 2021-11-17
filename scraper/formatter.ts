@@ -84,7 +84,7 @@ export class CurrencyFormatter implements Formatter {
     return this._instance;
   }
 
-  format(key: string, isoCode: string, currencyFormat: 'symbol' | 'acronym' = 'symbol'): string {
+  format(isoCode: string, currencyFormat: 'symbol' | 'acronym' = 'symbol'): string {
     const format = this.currencyDict.get(isoCode.toUpperCase());
     if (format) {
       return format[currencyFormat];
@@ -105,14 +105,14 @@ export class ObjectFormatter implements Formatter {
     return this._instance;
   }
 
-  format(obj: any, isoCode: string): any {
+  format(obj: any, isoCode: string, currencyFormat: 'acronym' | 'symbol'): any {
     const propertyNames = Object.getOwnPropertyNames(obj);
     propertyNames.forEach(name => {
       obj[name] = DefaultFormatter.instance.format(obj[name]);
       if (name === 'price') {
         obj[name] = PriceFormatter.instance.format(obj[name]);
       } else if (name === 'currency') {
-        obj[name] = CurrencyFormatter.instance.format(obj[name], isoCode);
+        obj[name] = CurrencyFormatter.instance.format(isoCode, currencyFormat);
       }
     });
     return obj;

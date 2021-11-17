@@ -1,0 +1,55 @@
+[
+  {
+    "id": "autopolis",
+    "baseURL": "https://www.autopolis.lu/fr/vehicules-neufs/en-stock?gclid=CjwKCAiAm7OMBhAQEiwArvGi3K8vltr60JAp_z2cUeo_SUqwXdVH5oYAuQ9p2tFgUacQCinMr_1ZcxoCYnMQAvD_BwE",
+    "selector": ".search-car__results div a",
+    "type": "TEXT",
+    "query": [
+      {
+        "children": [
+          ".row",
+          ".result__details",
+          ".result__name",
+          ".result__brand"
+        ],
+        "key": "brand"
+      },
+      {
+        "children": [
+          ".row",
+          ".result__details",
+          ".result__name",
+          ".result__range"
+        ],
+        "key": "model"
+      },
+      {
+        "children": [
+          ".row",
+          ".result__prices",
+          ".result__price",
+          "span"
+        ],
+        "key": "currency"
+      },
+      {
+        "children": [
+          ".row",
+          ".result__prices",
+          ".result__price",
+          "strong"
+        ],
+        "key": "price"
+      },
+      {
+        "children": [
+          ".row",
+          ".result__details",
+          ".result__characteristics",
+          ".result__model"
+        ],
+        "key": "characteristics"
+      }
+    ]
+  }
+]

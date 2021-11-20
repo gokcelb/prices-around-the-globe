@@ -59,5 +59,79 @@
     "type": "ATTR",
     "queryAttr": ".name h2 a",
     "attr": "href"
+  },
+  {
+    "id": "arabalar-series",
+    "baseURL": "http://www.arabalar.com.tr",
+    "selector": "#models .model",
+    "type": "ATTR",
+    "queryAttr": ".modelthumb a",
+    "attr": "href"
+  },
+  {
+    "id": "arabalar",
+    "baseURL": "http://www.arabalar.com.tr",
+    "selector": "#0km ul li",
+    "type": "TEXT",
+    "queryText": [
+      {
+        "children": [
+          "a"
+        ],
+        "key": "data"
+      },
+      {
+        "children": [
+          "span"
+        ],
+        "key": "price"
+      }
+    ]
+  },
+  {
+    "id": "truecar",
+    "baseURL": "https://www.truecar.com/new-cars-for-sale/listings/",
+    "selector": ".row li",
+    "type": "TEXT",
+    "queryText": [
+      {
+        "children": [
+          "div",
+          ".vehicle-card",
+          ".card-content",
+          ".vehicle-card-top",
+          "h3",
+          ".vehicle-card-header",
+          ".vehicle-header-make-model"
+        ],
+        "key": "brand-model"
+      },
+      {
+        "children": [
+          "div",
+          ".vehicle-card",
+          ".card-content",
+          "div.card-content.vehicle-card-body.order-3 > div:nth-child(2)",
+          ".vehicle-card-bottom",
+          ".vehicle-card-bottom-pricing",
+          ".vehicle-card-bottom-pricing-primary",
+          "div",
+          ".heading-4",
+          "span"
+        ],
+        "key": "price"
+      },
+      {
+        "children": [
+          "div",
+          ".vehicle-card",
+          ".card-content",
+          ".vehicle-card-top",
+          "h3",
+          ".font-size-1"
+        ],
+        "key": "characteristics"
+      }
+    ]
   }
 ]

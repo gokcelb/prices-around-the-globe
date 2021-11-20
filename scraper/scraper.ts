@@ -87,8 +87,8 @@ export class TextScraper extends Scraper<object> {
         const result: object[] = [];
         const rawHTML = await this.httpClient.get(path);
         const $ = cheerio.load(rawHTML);
-        const items = $(this.selector);
-
+        const items = $(this.selector);        
+        
         items.each((_, element) => {
             const loadedCheerio = $(element);
             const object: any = {};
@@ -97,7 +97,7 @@ export class TextScraper extends Scraper<object> {
                 const value = this.findChildren(loadedCheerio, branch.children).text();
                 object[branch.key] = value;
             });
-
+            
             result.push(object);
         });
 

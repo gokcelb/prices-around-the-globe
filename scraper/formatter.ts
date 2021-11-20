@@ -45,19 +45,46 @@ export class PriceFormatter implements Formatter {
   }
 
   format(text: string): number {
+    if (this.containsNumber(text) === false) return -1;
+
     const newText = text.replace(',', '.');
     const lastDotIdx = newText.lastIndexOf('.');
-    return this.deleteDotsUntilLast(newText, lastDotIdx);
+    return this.deleteUnnecessary(newText, lastDotIdx);
   }
 
-  private deleteDotsUntilLast(text: string, idx: number): number {
-    let formattedText: string = '';
+  private containsNumber(text: string): boolean {
+    const numbers: string[] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
     for (let i = 0; i < text.length; i++) {
-      if (text[i] === '.' && i !== idx) {
+      if (numbers.includes(text[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private deleteUnnecessary(text: string, idx: number): number {
+    let newText = '';
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] !== '.' && (text[i].charCodeAt(0) < 48 || text[i].charCodeAt(0) > 57)) {
         continue;
       }
-      formattedText += text[i];
-    };
+      newText += text[i];
+    }
+
+    let dotCount = 0;
+    for (let i = 0; i < newText.length; i++) {
+      if (newText[i] === '.') {
+        dotCount++;
+      }
+    } 
+
+    let formattedText: string = '';
+    for (let i = 0; i < newText.length; i++) {
+      if ((dotCount > 1 && newText[i] === '.' && i !== idx) || (dotCount <= 1 && newText[i] === '.')) {
+        continue;
+      }
+      formattedText += newText[i];
+    };    
     return parseFloat(formattedText);
   }
 }
@@ -107,14 +134,19 @@ export class ObjectFormatter implements Formatter {
 
   format(obj: any, isoCode: string, currencyFormat: 'acronym' | 'symbol'): any {
     const propertyNames = Object.getOwnPropertyNames(obj);
-    propertyNames.forEach(name => {
+    for(let i=0; i<propertyNames.length; i++) {
+      const name = propertyNames[i];
       obj[name] = DefaultFormatter.instance.format(obj[name]);
       if (name === 'price') {
         obj[name] = PriceFormatter.instance.format(obj[name]);
+        if (obj[name] === -1) {
+          return {};
+        }
       } else if (name === 'currency') {
         obj[name] = CurrencyFormatter.instance.format(isoCode, currencyFormat);
       }
-    });
+    }
+
     return obj;
   }
 }

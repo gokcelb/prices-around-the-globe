@@ -25,7 +25,9 @@ export abstract class Scraper<T> {
     }
 
     select(selector: string): Scraper<T> {
-        this.selector = selector;
+        if (selector) {
+            this.selector = selector;
+        }
         return this;
     }
 
@@ -56,7 +58,7 @@ export class AttrScraper extends Scraper<string> {
         const attrResult: string[] = [];
         const rawHTML = await this.httpClient.get(path);
         const $ = cheerio.load(rawHTML);
-
+        
         const items = $(this.selector);
         items.each((_, element) => {
             const result = this.findChildren($(element), this.children).attr(this.attribute);

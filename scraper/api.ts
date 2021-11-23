@@ -20,76 +20,90 @@ const notFoundErr = {
 };
 
 interface TextScrapeQuery {
-  q: string;
-  iso: string;
+  id: string;
+  q?: string;
   format: string;
 }
 
 interface AttrScrapeQuery {
-  q: string;
+  id: string;
   attr: string;
 }
 
 app.get('/text', async (req, res) => {
   const textScraperQuery: TextScrapeQuery = {
-    q: req.query.q as string,
-    iso: req.query.iso as string,
+    id: req.query.id as string,
     format: req.query.format as string,
   };
   try {
-    const textScrapeResponse = await scraperService.scrapeText(textScraperQuery.q, textScraperQuery.iso, textScraperQuery.format);
+    const textScrapeResponse = await scraperService.scrapeText(textScraperQuery.id, textScraperQuery.format);
     res.send(textScrapeResponse);
     return;
   } catch (e) {
     console.error(e);
-
     res.status(404).send(notFoundErr)
   }
 });
 
 app.get('/attr', async (req, res) => {
   const attrScraperQuery: AttrScrapeQuery = {
-    q: req.query.q as string,
+    id: req.query.id as string,
     attr: req.query.attr as string,
   };
   try {
-    const attrScraperResponse = await scraperService.scrapeAttr(attrScraperQuery.q, attrScraperQuery.attr);
+    const attrScraperResponse = await scraperService.scrapeAttr(attrScraperQuery.id, attrScraperQuery.attr);
     res.send(attrScraperResponse);
     return;
   } catch (e) {
+    console.error(e);
     res.status(404).send(notFoundErr);
   }
 })
 
 app.get('/linked', async (req, res) => {
   const linkedScraperQuery: TextScrapeQuery = {
-    q: req.query.q as string,
-    iso: req.query.iso as string,
+    id: req.query.id as string,
     format: req.query.format as string,
   }
   try {
-    const linkedScrapeResponse = await scraperService.scrapeLinked(linkedScraperQuery.q, linkedScraperQuery.iso, linkedScraperQuery.format);
+    const linkedScrapeResponse = await scraperService.scrapeLinked(linkedScraperQuery.id, linkedScraperQuery.format);
     res.send(linkedScrapeResponse);
     return;
   } catch (e) {
     res.status(404).send(notFoundErr);
+    console.error(e);
+    
   }
 })
+
+// give first scraper id, it will automatically scrape text
+app.get('/query', async (req, res) => {
+  const linkedScraperQuery: TextScrapeQuery = {
+    id: req.query.id as string,
+    q: req.query.q as string,
+    format: req.query.format as string,
+  }
+  try {
+    const linkedScrapeResponse = await scraperService.scrapeLinked(
+      linkedScraperQuery.id, linkedScraperQuery.format, linkedScraperQuery.q
+      );
+    res.send(linkedScrapeResponse);
+    return;
+  } catch (e) {
+    console.error(e);
+    res.status(404).send(notFoundErr);
+  }
+});
 
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`app listening on PORT ${port}`));
 
-function saveMockData() {
+function saveMockData(): void {
   const data = JSON.parse(readFileSync('data.json').toString());
-  const autopolistScrapeTextInfo: ScrapeInformation = data[0];
-  const arabalarBrandsScrapeAttrInfo: ScrapeInformation = data[1];
-  const arabalarSeriesScrapeAttrInfo: ScrapeInformation = data[2];
-  const arabalarScrapeTextInfo: ScrapeInformation = data[3];
-  const truecarScrapeTextInfo: ScrapeInformation = data[4];
-  scraperRepository.save(autopolistScrapeTextInfo);
-  scraperRepository.save(arabalarBrandsScrapeAttrInfo);
-  scraperRepository.save(arabalarSeriesScrapeAttrInfo);
-  scraperRepository.save(arabalarScrapeTextInfo);
-  scraperRepository.save(truecarScrapeTextInfo);
+
+  for (let i = 0; i < data.length; i++) {
+    const info: ScrapeInformation = data[i];
+    scraperRepository.save(info);
+  }
 }

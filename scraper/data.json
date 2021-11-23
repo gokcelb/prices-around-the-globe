@@ -1,6 +1,7 @@
 [
   {
-    "id": "autopolis",
+    "id": "autopolis-text",
+    "iso": "lu",
     "baseURL": "https://www.autopolis.lu/fr/vehicules-neufs/en-stock?gclid=CjwKCAiAm7OMBhAQEiwArvGi3K8vltr60JAp_z2cUeo_SUqwXdVH5oYAuQ9p2tFgUacQCinMr_1ZcxoCYnMQAvD_BwE",
     "selector": ".search-car__results div a",
     "type": "TEXT",
@@ -28,15 +29,6 @@
           ".row",
           ".result__prices",
           ".result__price",
-          "span"
-        ],
-        "key": "currency"
-      },
-      {
-        "children": [
-          ".row",
-          ".result__prices",
-          ".result__price",
           "strong"
         ],
         "key": "price"
@@ -57,6 +49,7 @@
     "baseURL": "http://www.arabalar.com.tr/araba-fiyatlari",
     "selector": "#fiyatlar .marka",
     "type": "ATTR",
+    "next": "arabalar-series",
     "queryAttr": ".name h2 a",
     "attr": "href"
   },
@@ -64,15 +57,18 @@
     "id": "arabalar-series",
     "baseURL": "http://www.arabalar.com.tr",
     "selector": "#models .model",
+    "next": "arabalar-text",
     "type": "ATTR",
     "queryAttr": ".modelthumb a",
     "attr": "href"
   },
   {
-    "id": "arabalar",
+    "id": "arabalar-text",
+    "iso": "tr",
     "baseURL": "http://www.arabalar.com.tr",
     "selector": "#0km ul li",
     "type": "TEXT",
+    "next": null,
     "queryText": [
       {
         "children": [
@@ -89,7 +85,8 @@
     ]
   },
   {
-    "id": "truecar",
+    "id": "truecar-text",
+    "iso": "us",
     "baseURL": "https://www.truecar.com/new-cars-for-sale/listings/",
     "selector": ".row li",
     "type": "TEXT",
@@ -131,6 +128,53 @@
           ".font-size-1"
         ],
         "key": "characteristics"
+      }
+    ]
+  },
+  {
+    "id": "araba-query",
+    "baseURL": "https://araba.com/arama?q={q}",
+    "selector": "body > div.page-container > div.page-wrapper > div.page-content > div > div > div:nth-child(1) > div.gsr-category-result > ul > li:nth-child(1) > a",
+    "type": "ATTR",
+    "next": "araba-text",
+    "attr": "href"
+  },
+  {
+    "id": "araba-text",
+    "iso": "tr",
+    "baseURL": "https://www.araba.com",
+    "type": "TEXT",
+    "next": null,
+    "selector": "table tbody tr",
+    "queryText":[
+      {
+        "children":[
+          "td.brand",
+          "a"
+        ],
+        "key":"brand-model-characteristics"
+      },
+      {
+        "children":[
+          "td.year",
+          "a"
+        ],
+        "key":"year"
+      },
+      {
+        "children":[
+          "td.milage",
+          "a"
+        ],
+        "key":"milage"
+      },
+      {
+        "children":[
+          "td:nth-child(8)",
+          "div.prices",
+          "div"
+        ],
+        "key":"price"
       }
     ]
   }

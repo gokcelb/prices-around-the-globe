@@ -14,6 +14,8 @@ export interface Branch {
 
 export interface ScrapeInformation {
   id: string;
+  iso: string;
+  next: string | null;
   type: ScraperType;
   baseURL: string;
   selector: string;
@@ -28,7 +30,7 @@ export class InMemoryScrapeInformationRepository implements Repository<ScrapeInf
   get(id: string): Promise<ScrapeInformation> {
     const scrapeInfo = this.storage.get(id);
     if (!scrapeInfo) {
-      return Promise.reject("Scrape information could not be found!");
+      return Promise.reject("Scrape information could not be found in repository");
     }
     return Promise.resolve(scrapeInfo);
   }

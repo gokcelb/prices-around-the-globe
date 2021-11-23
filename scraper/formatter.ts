@@ -142,8 +142,10 @@ export class ObjectFormatter implements Formatter {
         if (obj[name] === -1) {
           return {};
         }
-      } else if (name === 'currency') {
-        obj[name] = CurrencyFormatter.instance.format(isoCode, currencyFormat);
+      }
+      
+      if (!obj['currency']) {
+        obj['currency'] = CurrencyFormatter.instance.format(isoCode, currencyFormat);
       }
     }
 

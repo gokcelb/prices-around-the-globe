@@ -23,7 +23,7 @@ export class ScraperService {
     return attrScraper;
   }
 
-  async scrapeText(id: string, isoCode: string, currencyFormat: string) {
+  async scrapeText(id: string, currencyFormat: string) {
     const scrapeInfo = await this.scraperRepository.get(id);
 
     const textScraper = this.scraperFactory.createTextScraper(scrapeInfo.baseURL)
@@ -32,40 +32,56 @@ export class ScraperService {
       textScraper.branch(branch.children, branch.key);
     })
     const cars = await textScraper.scrape();
-
+    console.log(scrapeInfo.iso);
+    
     const objectFormatter = FormatterFactory.get('object');
-    // return cars.map(car => objectFormatter.format(car, isoCode, currencyFormat));
-    const formattedCars = cars.map(car => objectFormatter.format(car, isoCode, currencyFormat));
+    const formattedCars = cars.map(car => objectFormatter.format(car, scrapeInfo.iso, currencyFormat));
     return formattedCars;
   }
 
-  async scrapeLinked(id:string, isoCode: string, currencyFormat: string): Promise<object[]> {
-    const scrapeBrandsInfo = await this.scraperRepository.get('arabalar-brands');
-    const scrapeSeriesInfo = await this.scraperRepository.get('arabalar-series');
-    const scrapeDataInfo = await this.scraperRepository.get(id);
+  async scrapeLinked(id: string, currencyFormat: string, query?: string): Promise<object[]> {
+    console.log('activated', id);
+
+    let scraperInfo: ScrapeInformation = await this.scraperRepository.get(id);
+
+    if (query) {
+      scraperInfo.baseURL = scraperInfo.baseURL.replace('{q}', query);
+    }
+    console.log(scraperInfo);
+
+    const scraperInformationList: ScrapeInformation[] = [scraperInfo];
+
+    while (scraperInfo.next !== null) {
+      scraperInfo = await this.scraperRepository.get(scraperInfo.next);
+      scraperInformationList.push(scraperInfo);
+    }
+    console.log(scraperInformationList);
+
     const link = new LinkedScraper();
 
-    const attrScraper = this.scraperFactory.createAttrScraper(scrapeBrandsInfo.baseURL, scrapeBrandsInfo.attr)
-      .select(scrapeBrandsInfo.selector)
-      .child(...scrapeBrandsInfo.queryAttr.split(' '));
+    let idx = 0;
+    while (idx !== scraperInformationList.length - 1) {
+      let currentScraperInfo = scraperInformationList[idx]
+      const attrScraper = this.scraperFactory.createAttrScraper(currentScraperInfo.baseURL, currentScraperInfo.attr)
+        .select(currentScraperInfo.selector)
+      if (currentScraperInfo.queryAttr) {
+        attrScraper.child(...currentScraperInfo.queryAttr.split(' '));
+      }
+      link.addScraper(attrScraper)
+      idx++;
+    }
 
-    const secondAttrScraper = this.scraperFactory.createAttrScraper(scrapeSeriesInfo.baseURL, scrapeSeriesInfo.attr)
-      .select(scrapeSeriesInfo.selector)
-      .child(...scrapeSeriesInfo.queryAttr.split(' '));
-
-    const textScraper = this.scraperFactory.createTextScraper(scrapeDataInfo.baseURL);
-    scrapeDataInfo.queryText.forEach(branch => {
+    const textScraper = this.scraperFactory.createTextScraper(scraperInformationList[idx].baseURL);
+    scraperInformationList[idx].queryText.forEach(branch => {
       textScraper.branch(branch.children, branch.key);
     })
-    textScraper.select(scrapeDataInfo.selector);
-
-    link.setAttrScrapers([attrScraper, secondAttrScraper]);
-    link.setTextScraper(textScraper);
+    textScraper.select(scraperInformationList[idx].selector);
+    link.addScraper(textScraper);
 
     const objectFormatter = FormatterFactory.get('object');
-    await link.exec(0, [], 8);
+    await link.exec(0, [], 0);
     console.log(link.finalResult);
 
-    return link.finalResult.map(f => objectFormatter.format(f, isoCode, currencyFormat));
+    return link.finalResult.map(f => objectFormatter.format(f, scraperInformationList[idx].iso, currencyFormat));
   }
 }

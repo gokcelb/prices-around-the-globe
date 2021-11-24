@@ -1,5 +1,5 @@
 {
-  "name": "prices-around-the-globe",
+  "name": "scraper",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

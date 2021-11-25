@@ -15,7 +15,7 @@ app.use(express.json());
 saveMockData();
 
 const notFoundErr = {
-  errorCode: "404", // code oylesine
+  errorCode: "404",
   errorMsg: "given id not found"
 };
 
@@ -25,42 +25,7 @@ interface TextScrapeQuery {
   format: string;
 }
 
-interface AttrScrapeQuery {
-  id: string;
-  attr: string;
-}
-
 app.get('/text', async (req, res) => {
-  const textScraperQuery: TextScrapeQuery = {
-    id: req.query.id as string,
-    format: req.query.format as string,
-  };
-  try {
-    const textScrapeResponse = await scraperService.scrapeText(textScraperQuery.id, textScraperQuery.format);
-    res.send(textScrapeResponse);
-    return;
-  } catch (e) {
-    console.error(e);
-    res.status(404).send(notFoundErr)
-  }
-});
-
-app.get('/attr', async (req, res) => {
-  const attrScraperQuery: AttrScrapeQuery = {
-    id: req.query.id as string,
-    attr: req.query.attr as string,
-  };
-  try {
-    const attrScraperResponse = await scraperService.scrapeAttr(attrScraperQuery.id, attrScraperQuery.attr);
-    res.send(attrScraperResponse);
-    return;
-  } catch (e) {
-    console.error(e);
-    res.status(404).send(notFoundErr);
-  }
-})
-
-app.get('/linked', async (req, res) => {
   const linkedScraperQuery: TextScrapeQuery = {
     id: req.query.id as string,
     format: req.query.format as string,
@@ -76,7 +41,6 @@ app.get('/linked', async (req, res) => {
   }
 })
 
-// give first scraper id, it will automatically scrape text
 app.get('/query', async (req, res) => {
   const linkedScraperQuery: TextScrapeQuery = {
     id: req.query.id as string,

@@ -40,7 +40,7 @@ class ListingService {
             }
         } catch (err) { console.log(err); }
 
-        return items.data;
+        return items;
     }
 }
 

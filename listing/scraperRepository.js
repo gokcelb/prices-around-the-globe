@@ -1,4 +1,5 @@
 class ScraperRepository {
+  baseURL = "http://localhost:2000";
   client;
 
   constructor(client) {
@@ -6,12 +7,15 @@ class ScraperRepository {
   }
 
   async scrape(id) {
-    return await this.client.get(`http://localhost:2000/text?id=${id}`);
+    console.log('SCRAAAAPE');
+    const { data } = await this.client.get(`${this.baseURL}/text?id=${id}`);
+    return data;
   }
 
 
   async query(id, query) {
-    return await this.client.get(`http://localhost:2000/query?id=${id}&q=${encodeURI(query)}`);
+    const { data } = await this.client.get(`${this.baseURL}/query?id=${id}&q=${encodeURI(query)}`);
+    return data;
   }
 }
 

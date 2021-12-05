@@ -96,6 +96,7 @@ interface CurrencyFormat {
 
 export class CurrencyFormatter implements Formatter {
   private static _instance: CurrencyFormatter;
+
   protected currencyDict: Map<String, CurrencyFormat> = new Map([
     ['TR', { symbol: '₺', acronym: 'TRY' }],
     ['US', { symbol: '$', acronym: 'USD' }],
@@ -132,7 +133,7 @@ export class ObjectFormatter implements Formatter {
     return this._instance;
   }
 
-  format(obj: any, isoCode: string, currencyFormat: 'acronym' | 'symbol'): any {
+  format(obj: any, isoCode: string, currencyFormat: 'acronym' | 'symbol', category: string): any {
     const propertyNames = Object.getOwnPropertyNames(obj);
     for(let i=0; i<propertyNames.length; i++) {
       const name = propertyNames[i];
@@ -143,12 +144,13 @@ export class ObjectFormatter implements Formatter {
           return {};
         }
       }
-      
       if (!obj['currency']) {
         obj['currency'] = CurrencyFormatter.instance.format(isoCode, currencyFormat);
       }
+      if (!obj['category']) {
+        obj['category'] = category;
+      }
     }
-
     return obj;
   }
 }

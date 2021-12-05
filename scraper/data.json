@@ -1,6 +1,7 @@
 [
   {
     "id": "autopolis1",
+    "category": "car",
     "iso": "lu",
     "baseURL": "https://www.autopolis.lu/fr/vehicules-neufs/en-stock?gclid=CjwKCAiAm7OMBhAQEiwArvGi3K8vltr60JAp_z2cUeo_SUqwXdVH5oYAuQ9p2tFgUacQCinMr_1ZcxoCYnMQAvD_BwE",
     "selector": ".search-car__results div a",
@@ -66,6 +67,7 @@
   {
     "id": "arabalar3",
     "iso": "tr",
+    "category": "car",
     "baseURL": "http://www.arabalar.com.tr",
     "selector": "#0km ul li",
     "type": "TEXT",
@@ -88,6 +90,7 @@
   {
     "id": "truecar1",
     "iso": "us",
+    "category":"car",
     "baseURL": "https://www.truecar.com/new-cars-for-sale/listings/",
     "selector": ".row li",
     "type": "TEXT",
@@ -144,6 +147,7 @@
   {
     "id": "araba2",
     "iso": "tr",
+    "category":"car",
     "baseURL": "https://www.araba.com",
     "type": "TEXT",
     "next": null,

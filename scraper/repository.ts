@@ -15,6 +15,7 @@ export interface Branch {
 export interface ScrapeInformation {
   id: string;
   iso: string;
+  category: string;
   next: string | null;
   type: ScraperType;
   baseURL: string;

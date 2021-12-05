@@ -55,6 +55,7 @@ export class ScraperService {
     await link.exec(0, [], 0);
     console.log(link.finalResult);
 
-    return link.finalResult.map(f => objectFormatter.format(f, scraperInformationList[idx].iso, currencyFormat));
+    return link.finalResult.map(f => objectFormatter.format(
+      f, scraperInformationList[idx].iso, currencyFormat, scraperInformationList[idx].category));
   }
 }

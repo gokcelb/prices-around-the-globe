@@ -29,4 +29,16 @@ describe('Scraper repository scrape tests', () => {
 
     expect(axios.get).toHaveBeenCalledWith('http://localhost:2000/query?id=araba1&q=hyundai%20i20');
   });
+
+  test('Call client get with scrape id parameter and return data', async () => {
+    const data = await scraperRepository.scrape('truecar1');
+
+    expect(data).toEqual(items.data);
+  });
+
+  test('Call client get with query id and query parameter and return data', async () => {
+    const data = await scraperRepository.query('araba1', 'hyundai i20');
+
+    expect(data).toEqual(items.data);
+  });
 })

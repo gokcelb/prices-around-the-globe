@@ -1,13 +1,10 @@
-
 class ListingService {
     repository;
     scraperRepository;
-    searchEngine;
 
     constructor(repository, scraperRepository) {
         this.repository = repository;
         this.scraperRepository = scraperRepository;
-        // this.searchEngine = searchEngine;
     }
 
     async forceList(itemCategory, websiteId) {
@@ -32,13 +29,32 @@ class ListingService {
         let items;
 
         try {
-            // let items = this.searchEngine.search(this.repository, query);
+            items = await this.repository.findByQuery(query);
 
             if (!items || items.length === 0) {
+                console.log('went into forceQuery IF')
+
                 items = await this.scraperRepository.query(websiteId, query);
+
+                items.forEach(item => {
+                    const propertyNames = Object.getOwnPropertyNames(item);
+                    console.log(propertyNames);
+                    const propertyValues = [];
+                    for (let i = 0; i < propertyNames.length; i++) {
+                        let name = propertyNames[i];
+                        if (name === 'price' || name === 'mileage' || name === 'currency' || name === 'category') continue;
+                        propertyValues.push(item[name]);
+                    }
+                    item['textSearch'] = propertyValues.join(' ');
+                    console.log(item['textSearch']);
+                })
+
                 this.repository.save(items);
             }
-        } catch (err) { console.log(err); }
+        }
+         catch (err) {
+            console.log(err);
+        }
 
         return items;
     }

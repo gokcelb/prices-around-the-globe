@@ -135,7 +135,6 @@ export class ObjectFormatter implements Formatter {
 
   format(obj: any, isoCode: string, currencyFormat: 'acronym' | 'symbol', category: string): any {
     const propertyNames = Object.getOwnPropertyNames(obj);
-    const propertyValues: string[] = [];
 
     for(let i=0; i<propertyNames.length; i++) {
       const name = propertyNames[i];
@@ -156,14 +155,6 @@ export class ObjectFormatter implements Formatter {
         obj['category'] = category;
       }
     }
-
-    propertyNames.forEach((name) => {
-      const val = obj[name];
-      propertyValues.push(val);
-    })
-
-    obj['text-search'] = propertyValues.join(' ');
-
     return obj;
   }
 }

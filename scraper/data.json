@@ -15,7 +15,7 @@
           ".result__name",
           ".result__brand"
         ],
-        "key": "brand"
+        "key": "make"
       },
       {
         "children": [
@@ -106,7 +106,7 @@
           ".vehicle-card-header",
           ".vehicle-header-make-model"
         ],
-        "key": "brand-model"
+        "key": "makeModel"
       },
       {
         "children": [
@@ -158,7 +158,7 @@
           "td.brand",
           "a"
         ],
-        "key":"brand-model-characteristics"
+        "key":"makeModelCharacteristics"
       },
       {
         "children":[
@@ -172,7 +172,7 @@
           "td.milage",
           "a"
         ],
-        "key":"milage"
+        "key":"mileage"
       },
       {
         "children":[

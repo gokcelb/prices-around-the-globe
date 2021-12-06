@@ -53,7 +53,6 @@ export class ScraperService {
 
     const objectFormatter = FormatterFactory.get('object');
     await link.exec(0, [], 0);
-    console.log(link.finalResult);
 
     return link.finalResult.map(f => objectFormatter.format(
       f, scraperInformationList[idx].iso, currencyFormat, scraperInformationList[idx].category));

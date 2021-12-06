@@ -1,5 +1,9 @@
 {
   "name": "listing",
+  "jest": {
+    "verbose": true,
+    "preset": "@shelf/jest-mongodb"
+  },
   "version": "1.0.0",
   "description": "__Prices Around the Globe__ will be a web application that allows users to compare prices from around the world. Basically, the app will scrape data from the web and merge those data in a user-friendly way with country and product options.",
   "main": "index.js",
@@ -17,10 +21,12 @@
   },
   "homepage": "https://github.com/gokcelb/prices-around-the-globe#readme",
   "dependencies": {
+    "@shelf/jest-mongodb": "^2.1.0",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongodb": "^4.2.0"
+    "mongodb": "^4.2.0",
+    "mongoose": "^6.0.14"
   },
   "devDependencies": {
     "jest": "^27.3.1",

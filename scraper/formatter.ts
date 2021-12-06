@@ -84,7 +84,7 @@ export class PriceFormatter implements Formatter {
         continue;
       }
       formattedText += newText[i];
-    };    
+    }
     return parseFloat(formattedText);
   }
 }
@@ -135,6 +135,8 @@ export class ObjectFormatter implements Formatter {
 
   format(obj: any, isoCode: string, currencyFormat: 'acronym' | 'symbol', category: string): any {
     const propertyNames = Object.getOwnPropertyNames(obj);
+    const propertyValues: string[] = [];
+
     for(let i=0; i<propertyNames.length; i++) {
       const name = propertyNames[i];
       obj[name] = DefaultFormatter.instance.format(obj[name]);
@@ -144,6 +146,9 @@ export class ObjectFormatter implements Formatter {
           return {};
         }
       }
+      if (name === 'mileage') {
+        obj[name] = PriceFormatter.instance.format(obj[name]);
+      }
       if (!obj['currency']) {
         obj['currency'] = CurrencyFormatter.instance.format(isoCode, currencyFormat);
       }
@@ -151,6 +156,14 @@ export class ObjectFormatter implements Formatter {
         obj['category'] = category;
       }
     }
+
+    propertyNames.forEach((name) => {
+      const val = obj[name];
+      propertyValues.push(val);
+    })
+
+    obj['text-search'] = propertyValues.join(' ');
+
     return obj;
   }
 }

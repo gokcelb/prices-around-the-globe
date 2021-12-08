@@ -1,12 +1,14 @@
 [
   {
     "id": "autopolis1",
-    "category": "car",
     "iso": "lu",
+    "category": "car",
     "baseURL": "https://www.autopolis.lu/fr/vehicules-neufs/en-stock?gclid=CjwKCAiAm7OMBhAQEiwArvGi3K8vltr60JAp_z2cUeo_SUqwXdVH5oYAuQ9p2tFgUacQCinMr_1ZcxoCYnMQAvD_BwE",
     "selector": ".search-car__results div a",
     "next": null,
-    "type": "TEXT",
+    "parent": null,
+    "type": 1,
+    "subtype": 1,
     "queryText": [
       {
         "children": [
@@ -48,19 +50,25 @@
   },
   {
     "id": "arabalar1",
+    "iso": "tr",
     "baseURL": "http://www.arabalar.com.tr/araba-fiyatlari",
     "selector": "#fiyatlar .marka",
-    "type": "ATTR",
+    "type": 0,
+    "subtype": 1,
     "next": "arabalar2",
+    "parent": null,
     "queryAttr": ".name h2 a",
     "attr": "href"
   },
   {
     "id": "arabalar2",
+    "iso": "tr",
     "baseURL": "http://www.arabalar.com.tr",
     "selector": "#models .model",
     "next": "arabalar3",
-    "type": "ATTR",
+    "parent": "arabalar1",
+    "type": 0,
+    "subtype": 1,
     "queryAttr": ".modelthumb a",
     "attr": "href"
   },
@@ -70,14 +78,16 @@
     "category": "car",
     "baseURL": "http://www.arabalar.com.tr",
     "selector": "#0km ul li",
-    "type": "TEXT",
+    "type": 1,
+    "subtype": 1,
     "next": null,
+    "parent": "arabalar2",
     "queryText": [
       {
         "children": [
           "a"
         ],
-        "key": "data"
+        "key": "yearMakeModelFeatures"
       },
       {
         "children": [
@@ -93,8 +103,10 @@
     "category":"car",
     "baseURL": "https://www.truecar.com/new-cars-for-sale/listings/",
     "selector": ".row li",
-    "type": "TEXT",
+    "type": 1,
+    "subtype": 1,
     "next": null,
+    "parent": null,
     "queryText": [
       {
         "children": [
@@ -132,16 +144,19 @@
           "h3",
           ".font-size-1"
         ],
-        "key": "characteristics"
+        "key": "features"
       }
     ]
   },
   {
     "id": "araba1",
+    "iso": "tr",
     "baseURL": "https://araba.com/arama?q={q}",
     "selector": "body > div.page-container > div.page-wrapper > div.page-content > div > div > div:nth-child(1) > div.gsr-category-result > ul > li:nth-child(1) > a",
-    "type": "ATTR",
+    "type": 0,
+    "subtype": 2,
     "next": "araba2",
+    "parent": null,
     "attr": "href"
   },
   {
@@ -149,8 +164,10 @@
     "iso": "tr",
     "category":"car",
     "baseURL": "https://www.araba.com",
-    "type": "TEXT",
+    "type": 2,
+    "subtype": 2,
     "next": null,
+    "parent": "araba1",
     "selector": "table tbody tr",
     "queryText":[
       {
@@ -158,7 +175,7 @@
           "td.brand",
           "a"
         ],
-        "key":"makeModelCharacteristics"
+        "key":"makeModelFeatures"
       },
       {
         "children":[

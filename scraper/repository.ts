@@ -4,8 +4,9 @@ export interface Repository<T> {
 }
 
 export enum ScraperType {
+  ATTR,
   TEXT,
-  ATTR
+  QUERY,
 }
 export interface Branch {
   key: string;
@@ -17,7 +18,9 @@ export interface ScrapeInformation {
   iso: string;
   category: string;
   next: string | null;
+  parent: string | null;
   type: ScraperType;
+  subtype: ScraperType;
   baseURL: string;
   selector: string;
   queryText: Branch[];

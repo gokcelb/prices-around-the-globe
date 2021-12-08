@@ -20,19 +20,20 @@ const notFoundErr = {
 };
 
 interface TextScrapeQuery {
-  id: string;
+  iso: string;
   q?: string;
   format: string;
 }
 
 app.get('/text', async (req, res) => {
   const linkedScraperQuery: TextScrapeQuery = {
-    id: req.query.id as string,
+    iso: req.query.iso as string,
     format: req.query.format as string,
   }
   try {
-    const linkedScrapeResponse = await scraperService.scrapeLinked(linkedScraperQuery.id, linkedScraperQuery.format);
-    res.send(linkedScrapeResponse);
+    const linkedScrapeResponse = await scraperService.scrapeLinked(linkedScraperQuery.iso, linkedScraperQuery.format);
+    const cleanedResponse = linkedScrapeResponse.filter(value => Object.keys(value).length !== 0);
+    res.send(cleanedResponse);
     return;
   } catch (e) {
     res.status(404).send(notFoundErr);
@@ -43,15 +44,16 @@ app.get('/text', async (req, res) => {
 
 app.get('/query', async (req, res) => {
   const linkedScraperQuery: TextScrapeQuery = {
-    id: req.query.id as string,
+    iso: req.query.iso as string,
     q: req.query.q as string,
     format: req.query.format as string,
   }
   try {
     const linkedScrapeResponse = await scraperService.scrapeLinked(
-      linkedScraperQuery.id, linkedScraperQuery.format, linkedScraperQuery.q
+      linkedScraperQuery.iso, linkedScraperQuery.format, linkedScraperQuery.q
       );
-    res.send(linkedScrapeResponse);
+    const cleanedResponse = linkedScrapeResponse.filter(value => Object.keys(value).length !== 0);
+    res.send(cleanedResponse);
     return;
   } catch (e) {
     console.error(e);

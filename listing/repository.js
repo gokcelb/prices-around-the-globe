@@ -1,4 +1,5 @@
 class Repository {
+  // TODO - refactor functions: save, saveWithCategory
   client;
 
   constructor(client) {
@@ -12,10 +13,10 @@ class Repository {
       console.log('index created')
       const cursor = await this.client.db('listing').collection('car').find({ $text: {$search: queryText}  });
       console.log(`find textSearch ran for=${queryText}`)
-      // console.log(await cursor.toArray())
       return await cursor.toArray();
     } catch(e) {
       console.error(e);
+      return [];
     }
   }
 

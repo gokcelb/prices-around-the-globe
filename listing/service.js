@@ -7,38 +7,38 @@ class ListingService {
         this.scraperRepository = scraperRepository;
     }
 
-    async forceList(itemCategory, websiteId) {
+    async forceList(itemCategory, iso) {
+        // TODO - decide whether it should be with or without iso
         let items;
-
         try {
             items = await this.repository.findByCategory(itemCategory);
 
             if (!items || items.length === 0) {
-                console.log('items DOES NOT EXIST');
-                items = await this.scraperRepository.scrape(websiteId);
-                this.repository.saveWithCategory(itemCategory, items);
+                items = await this.scraperRepository.scrape(iso);
+
+                if (items.length > 0) {
+                    this.repository.saveWithCategory(itemCategory, items);
+                }
             }
         } catch (err) {
             console.log(err);
+            return [];
         }
-
         return items;
     }
 
-    async forceQuery(websiteId, query) {
+    async forceQuery(iso, query) {
         let items;
-
         try {
             items = await this.repository.findByQuery(query);
 
             if (!items || items.length === 0) {
-                console.log('went into forceQuery IF')
-
-                items = await this.scraperRepository.query(websiteId, query);
+                console.log('went into if to call query function')
+                items = await this.scraperRepository.query(iso, query);
+                console.log('called query function')
 
                 items.forEach(item => {
                     const propertyNames = Object.getOwnPropertyNames(item);
-                    console.log(propertyNames);
                     const propertyValues = [];
                     for (let i = 0; i < propertyNames.length; i++) {
                         let name = propertyNames[i];
@@ -46,16 +46,17 @@ class ListingService {
                         propertyValues.push(item[name]);
                     }
                     item['textSearch'] = propertyValues.join(' ');
-                    console.log(item['textSearch']);
-                })
+                });
 
-                this.repository.save(items);
+                if (items.length > 0) {
+                    this.repository.save(items);
+                }
             }
         }
          catch (err) {
             console.log(err);
+            return [];
         }
-
         return items;
     }
 }

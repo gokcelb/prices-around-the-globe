@@ -6,15 +6,14 @@ class ScraperRepository {
     this.client = client;
   }
 
-  async scrape(id) {
-    console.log('SCRAAAAPE');
-    const { data } = await this.client.get(`${this.baseURL}/text?id=${id}`);
+  async scrape(iso) {
+    const { data } = await this.client.get(`${this.baseURL}/text?iso=${iso}`);
     return data;
   }
 
-
-  async query(id, query) {
-    const { data } = await this.client.get(`${this.baseURL}/query?id=${id}&q=${encodeURI(query)}`);
+  async query(iso, query) {
+    console.log(query)
+    const { data } = await this.client.get(`${this.baseURL}/query?iso=${iso}&q=${encodeURI(query)}`);
     return data;
   }
 }

@@ -12,7 +12,7 @@ describe('Listing Service forceList tests', () => {
         service = new listing.ListingService(mockRepository, mockScraperRepository);
     })
 
-    test('Call get forceList of data from repository according to given category and websiteId', () => {
+    test('calls get forceList of data from repository according to given category and websiteId', () => {
         service.forceList('car', 'autopolis1');
         service.forceList('food', 'lalo1');
 
@@ -20,7 +20,7 @@ describe('Listing Service forceList tests', () => {
         expect(mockRepository.findByCategory).toHaveBeenCalledWith('food');
     });
 
-    test('Do not call scraper scrape when there is data in repository', async() => {
+    test('does not call scraper scrape when there is data in repository', async() => {
         mockRepository.findByCategory.mockReturnValue([1,2]);
 
         const result = await service.forceList('car');
@@ -30,7 +30,7 @@ describe('Listing Service forceList tests', () => {
         expect(result).toEqual([1, 2]);
     });
 
-    test('Call scraper for data when there is no data inside repository', async () => {
+    test('calls scraper for data when there is no data inside repository', async () => {
         mockRepository.findByCategory.mockReturnValue([]);
         mockScraperRepository.scrape.mockReturnValue([3]);
 
@@ -40,55 +40,112 @@ describe('Listing Service forceList tests', () => {
         expect(result).toEqual([3]);
     });
 
-    test('Save scraped data with given category to repository', async () => {
+    test('saves scraped data with given category to repository', async () => {
         mockScraperRepository.scrape.mockReturnValue([3]);
 
         await service.forceList('car', 'autopolis1');
 
         expect(mockRepository.saveWithCategory).toHaveBeenCalledWith('car', [3]);
     });
-});
+
+    test('returns empty list if error occurs', async () => {
+        mockRepository = {
+            'findByCategory': jest.fn(() => new Error('error')), 'findByQuery': jest.fn()
+        };
+
+        try {
+            await service.forceQuery('truecar1', 'bmw');
+        } catch (e) {
+            expect(e).toMatch('error')
+        }
+    });
+})
 
 
 describe('Listing Service ForceQuery tests', () => {
     let mockRepository;
     let mockScraperRepository;
-    let mockSearchEngine;
     let service;
     
     beforeEach( () => {
-        mockRepository = { 'save': jest.fn() };
+        mockRepository = { 'save': jest.fn(), 'findByQuery': jest.fn() };
         mockScraperRepository = { 'query': jest.fn() };
-        mockSearchEngine = { 'search': jest.fn() };
 
-        service = new listing.ListingService(mockRepository, mockScraperRepository, mockSearchEngine);
-    })
+        service = new listing.ListingService(mockRepository, mockScraperRepository);
+    });
 
-    // test('Call searchEngine search function with repository and query', async () => {
-    //     mockSearchEngine.search.mockReturnValue([0, 4]);
-    //
-    //     const result = await service.forceQuery('autopolis1', 'i20');
-    //
-    //     expect(mockSearchEngine.search).toHaveBeenCalledWith(mockRepository, 'i20');
-    //     expect(result).toEqual([0, 4]);
-    // });
+    test('calls repository findByQuery function with query and returns result', async () => {
+        mockRepository.findByQuery.mockReturnValue([5, 8]);
 
-    test('Call scraperRepository query function with query if searchEngine search method returns empty', async () => {
-        mockScraperRepository.query.mockReturnValue([3]);
-        // mockSearchEngine.search.mockReturnValue([]);
+        const result = await service.forceQuery('autopolis1', 'bmw');
+
+        expect(mockRepository.findByQuery).toHaveBeenCalledWith('bmw');
+        expect(mockScraperRepository.query).not.toHaveBeenCalled();
+        expect(result).toEqual([5, 8]);
+    });
+
+    test('calls scraperRepository query function with query if repository findByQuery method returns empty', async () => {
+        mockRepository.findByQuery.mockReturnValue([]);
+        mockScraperRepository.query.mockReturnValue([
+            {
+                make: "BMW",
+                year: "2012",
+                mileage: 432000,
+                price: 75000,
+                currency: "$",
+                category: "car"
+            }
+        ]);
 
         const result = await service.forceQuery('autopolis1', 'bmw');
 
         expect(mockScraperRepository.query).toHaveBeenCalledWith('autopolis1', 'bmw');
-        expect(result).toEqual([3]);
-    })
+        expect(result).toEqual([{
+            make: "BMW",
+            year: "2012",
+            mileage: 432000,
+            price: 75000,
+            currency: "$",
+            category: "car",
+            textSearch: "BMW 2012"
+        }]);
+    });
 
-    test('Save scraped query result to repository', async () => {
-        mockScraperRepository.query.mockReturnValue([3]);
+    test('calls save function to save scraped query result to repository', async () => {
+        mockRepository.findByQuery.mockReturnValue([]);
+        mockScraperRepository.query.mockReturnValue([{
+            make: "BMW",
+            year: "2012",
+            mileage: 432000,
+            price: 75000,
+            currency: "$",
+            category: "car"
+        }]);
 
         await service.forceQuery('autopolis1', 'compass');
 
-        expect(mockScraperRepository.query).toHaveBeenCalledWith('autopolis1', 'compass');
-        expect(mockRepository.save).toHaveBeenCalledWith([3]);
-    })
-});
+        expect(mockRepository.save).toHaveBeenCalledWith([
+            {
+                make: "BMW",
+                year: "2012",
+                mileage: 432000,
+                price: 75000,
+                currency: "$",
+                category: "car",
+                textSearch: "BMW 2012"
+            }
+        ]);
+    });
+
+    test('returns empty list if error occurs', async () => {
+        mockRepository = {
+            'findByCategory': jest.fn(), 'findByQuery': jest.fn(() => new Error('error'))
+        };
+
+        try {
+            await service.forceQuery('truecar1', 'bmw');
+        } catch (e) {
+            expect(e).toMatch('error')
+        }
+    });
+})

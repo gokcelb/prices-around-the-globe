@@ -18,25 +18,25 @@ describe('Scraper repository scrape tests', () => {
     axios.get.mockResolvedValueOnce(items);
   })
 
-  test('Call client get with scrape id parameter', async () => {
+  test('calls client get with scrape id parameter', async () => {
     await scraperRepository.scrape('truecar1');
 
     expect(axios.get).toHaveBeenCalledWith('http://localhost:2000/text?id=truecar1');
   });
 
-  test('Call client get with query id and query parameter', async () => {
+  test('calls client get with query id and query parameter', async () => {
     await scraperRepository.query('araba1', 'hyundai i20');
 
     expect(axios.get).toHaveBeenCalledWith('http://localhost:2000/query?id=araba1&q=hyundai%20i20');
   });
 
-  test('Call client get with scrape id parameter and return data', async () => {
+  test('calls client get with scrape id parameter and return data', async () => {
     const data = await scraperRepository.scrape('truecar1');
 
     expect(data).toEqual(items.data);
   });
 
-  test('Call client get with query id and query parameter and return data', async () => {
+  test('calls client get with query id and query parameter and return data', async () => {
     const data = await scraperRepository.query('araba1', 'hyundai i20');
 
     expect(data).toEqual(items.data);

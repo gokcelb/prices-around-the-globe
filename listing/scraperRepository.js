@@ -1,5 +1,7 @@
+require('dotenv/config');
+
 class ScraperRepository {
-  baseURL = "http://localhost:2000";
+  baseURL = `http://localhost:${process.env.FOREIGN_PORT}`;
   client;
 
   constructor(client) {
@@ -7,13 +9,16 @@ class ScraperRepository {
   }
 
   async scrape(iso) {
-    const { data } = await this.client.get(`${this.baseURL}/text?iso=${iso}`);
+    const isoQueryString = iso ? `?iso=${iso}` : '';
+
+    const { data } = await this.client.get(`${this.baseURL}/text${isoQueryString}`);
     return data;
   }
 
-  async query(iso, query) {
-    console.log(query)
-    const { data } = await this.client.get(`${this.baseURL}/query?iso=${iso}&q=${encodeURI(query)}`);
+  async query(query, iso) {
+    const isoQueryString = iso ? `&iso=${iso}` : '';
+
+    const { data } = await this.client.get(`${this.baseURL}/query?q=${encodeURI(query)}${isoQueryString}`);
     return data;
   }
 }

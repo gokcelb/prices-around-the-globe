@@ -1,48 +1,64 @@
 class ListingService {
     repository;
     scraperRepository;
+    isoList;
 
-    constructor(repository, scraperRepository) {
+    constructor(repository, scraperRepository, isoList) {
         this.repository = repository;
         this.scraperRepository = scraperRepository;
+        this.isoList = isoList;
     }
 
-    async forceList(itemCategory, iso) {
-        // TODO - decide whether it should be with or without iso
+    async forceList(category, iso=null) {
         let items;
         try {
-            items = await this.repository.findByCategory(itemCategory);
+            if (iso) {
+                items = await this.repository.findByCategory(category, iso);
+            } else {
+                for (let i = 0; i < this.isoList.length; i++) {
+                    let currIso = this.isoList[i];
+                    items = await this.repository.findByCategory(category, currIso);
+                    if (items.length === 0) break;
+                }
+            }
 
             if (!items || items.length === 0) {
                 items = await this.scraperRepository.scrape(iso);
 
                 if (items.length > 0) {
-                    this.repository.saveWithCategory(itemCategory, items);
+                    this.repository.saveWithCategory(category, items);
                 }
             }
+            return items;
         } catch (err) {
             console.log(err);
             return [];
         }
-        return items;
     }
 
-    async forceQuery(iso, query) {
+    async forceQuery(query, iso=null) {
         let items;
         try {
-            items = await this.repository.findByQuery(query);
+            if (iso) {
+                items = await this.repository.findByQuery(query, iso);
+            } else {
+                for (let i = 0; i < this.isoList.length; i++) {
+                    let currIso = this.isoList[i];
+                    items = await this.repository.findByQuery(query, currIso);
+                    if (items.length === 0) break;
+                }
+            }
 
             if (!items || items.length === 0) {
-                console.log('went into if to call query function')
-                items = await this.scraperRepository.query(iso, query);
-                console.log('called query function')
+                items = await this.scraperRepository.query(query, iso);
 
                 items.forEach(item => {
                     const propertyNames = Object.getOwnPropertyNames(item);
                     const propertyValues = [];
                     for (let i = 0; i < propertyNames.length; i++) {
                         let name = propertyNames[i];
-                        if (name === 'price' || name === 'mileage' || name === 'currency' || name === 'category') continue;
+                        const willNotInclude = ['price', 'mileage', 'currency', 'category', 'iso'];
+                        if (willNotInclude.includes(name)) continue;
                         propertyValues.push(item[name]);
                     }
                     item['textSearch'] = propertyValues.join(' ');
@@ -52,12 +68,12 @@ class ListingService {
                     this.repository.save(items);
                 }
             }
+            return items;
         }
          catch (err) {
             console.log(err);
             return [];
         }
-        return items;
     }
 }
 

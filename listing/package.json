@@ -6,7 +6,7 @@
   },
   "version": "1.0.0",
   "description": "__Prices Around the Globe__ will be a web application that allows users to compare prices from around the world. Basically, the app will scrape data from the web and merge those data in a user-friendly way with country and product options.",
-  "main": "index.js",
+  "main": "api.js",
   "scripts": {
     "test": "jest"
   },

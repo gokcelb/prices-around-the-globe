@@ -14,12 +14,12 @@ const dbClient = new MongoClient(uri);
 async function run() {
     await dbClient.connect();
 }
-
 run();
 
 const repository = new Repository(dbClient);
 const scraperRepository = new ScraperRepository(httpClient);
-const service = new ListingService(repository, scraperRepository);
+const isoList = ['tr', 'us', 'lu'];
+const service = new ListingService(repository, scraperRepository, isoList);
 
 app.get('/categories/:category', async (req, res) => {
     try {
@@ -35,9 +35,9 @@ app.get('/categories/:category', async (req, res) => {
 
 app.get('/', async (req, res) => {
     try {
-        const iso = req.query.iso;
         const query = req.query.q;
-        const items = await service.forceQuery(iso, query);
+        const iso = req.query.iso;
+        const items = await service.forceQuery(query, iso);
         res.send(items);
     } catch (e) {
         console.error(e.message);

@@ -1,7 +1,7 @@
 require('dotenv/config');
 
 class ScraperRepository {
-  baseURL = `http://localhost:${process.env.FOREIGN_PORT}`;
+  baseURL = `${process.env.SCRAPER_HOST}`;
   client;
 
   constructor(client) {

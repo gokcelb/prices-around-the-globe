@@ -13,20 +13,26 @@ export class ScraperService {
     this.scraperRepository = scraperRepository;
   }
 
-  protected getIdFromIso(iso: string, viableScraperType: ScraperType): string[] {
+  protected getIdFromIso(iso: string | null, viableScraperType: ScraperType): string[] {
     const data = JSON.parse(readFileSync('data.json').toString());
     const ids: string[] = [];
 
     for (let i = 0; i < data.length; i++) {
       const info: ScrapeInformation = data[i];
-      if (info.iso.toLowerCase() === iso.toLowerCase() && info.parent === null && info.subtype === viableScraperType) {
+      if (iso === null || iso === undefined) {
+        if (info.parent === null && info.subtype === viableScraperType) {
           ids.push(info.id);
+       }
+      } else {
+        if (info.iso.toLowerCase() === iso.toLowerCase() && info.parent === null && info.subtype === viableScraperType) {
+          ids.push(info.id);
+        }
       }
     }
     return ids;
   }
 
-  async scrapeLinked(iso: string, currencyFormat: string, query?: string): Promise<object[]> {
+  async scrapeLinked(iso: string | null, currencyFormat: string, query?: string): Promise<object[]> {
     let viableScraperType: ScraperType;
     if (query) {
       viableScraperType = ScraperType.QUERY;

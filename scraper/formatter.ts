@@ -154,6 +154,9 @@ export class ObjectFormatter implements Formatter {
       if (!obj['category']) {
         obj['category'] = category;
       }
+      if (!obj['iso']) {
+        obj['iso'] = isoCode.toLowerCase();
+      }
     }
     return obj;
   }

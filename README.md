@@ -19,6 +19,12 @@ Run the application using docker-compose.
 $ docker compose up
 ```
 
+## User Interface
+
+Below is an initial design idea of the UI.
+
+![Initial UI design](./.docs/ui1.PNG)
+
 ## Design
 
 Below is a diagram of the app design:

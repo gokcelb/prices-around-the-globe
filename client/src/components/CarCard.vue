@@ -1,15 +1,15 @@
 <template>
   <div class="car-card">
-    <h2 class="car-title">{{ formatCarTitle() }}</h2>
-    <p class="car-price">
-      <bold>{{ car.currency }}</bold>
-      {{ car.price }}
-    </p>
-    <div class="car-details">
-        <p><strong>Year</strong> {{ car.year }}</p>
-        <p><strong>Mileage</strong> {{ car.mileage }}</p>
-        <p><strong>Fuel Type</strong> {{ car.fuel }}</p>
-        <p><strong>Engine</strong> {{ car.features }}</p>
+    <img class="car-img" alt="some car" :src="car.imageURL">
+    <div class="car-info">
+      <p class="car-title">{{ formattedCarTitle }}</p>
+      <p class="car-price">{{ car.currency }}{{ car.price }}</p>
+    </div>
+    <div v-if="show" class="car-details">
+        <p><b>Year</b> {{ car.year }}</p>
+        <p><b>Mileage</b> {{ car.mileage }}</p>
+        <p><b>Fuel Type</b> {{ car.fuel }}</p>
+        <p><b>Engine</b> {{ car.features }}</p>
     </div>
   </div>
 </template>
@@ -19,20 +19,18 @@ export default {
   name: "car-card",
   props: { 
     car: Object,
-    carTitle: String
+  },
+  data() {
+    return {
+      show: false,
+    }
   },
   methods: {
-    formatCarTitle: () => {
-      console.log(`car props: ${this.car}`)
-      return `${this.car.make}, ${this.car.model}`
-    },
-    created: () => {
-      console.log("created")
-      console.log(this.carTitle)
-    },
-    mounted: () => {
-      console.log("mounted")
-      console.log(this.car)
+
+  },
+  computed: {
+    formattedCarTitle: function () {
+      return `${this.car.make} ${this.car.model}`;
     }
   },
 };
@@ -40,10 +38,29 @@ export default {
 
 <style scoped>
 .car-card {
-    border-style: solid;
-    border-width: 1px;
-    height: 200px;
-    width: 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
+  box-shadow: 4px 7px lightgrey;
+  float: left;
+  height: 170px;
+  width: 16%;
+  margin: 2% 1%;
+  padding: 10px;
+}
+
+.car-img {
+  height: 60%;
+  width: 90%;
+}
+
+.car-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8%;
+}
+
+.car-title {
 }
 
 .car-details {

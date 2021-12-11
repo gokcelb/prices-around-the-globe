@@ -75,6 +75,16 @@ class ListingService {
             return [];
         }
     }
+
+    async search() {
+        try {
+            console.log('went into searchTexts')
+            return await this.repository.getSearchTexts();
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
+    }
 }
 
 exports.ListingService = ListingService;

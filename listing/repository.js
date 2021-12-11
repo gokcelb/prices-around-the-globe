@@ -23,6 +23,15 @@ class Repository {
   async save(items) {
     await this.client.db('listing').collection('car').insertMany(items);
   }
+
+  async getSearchTexts() {
+    console.log('went into get search texts')
+    const cursor = await this.client.db('listing').collection('car').find(
+        { },
+        { projection: {textSearch: 1, _id: 0} }
+    )
+    return await cursor.toArray();
+  }
 }
 
 exports.Repository = Repository;

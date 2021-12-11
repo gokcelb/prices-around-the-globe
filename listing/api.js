@@ -3,10 +3,12 @@ const express = require('express');
 const { Repository } = require('./repository');
 const { ScraperRepository } = require('./scraperRepository');
 const { ListingService } = require('./service');
-const {MongoClient} = require("mongodb");
+const { MongoClient } = require("mongodb");
 const httpClient = require('axios');
+const cors = require('cors');
 
 const app = express();
+app.use(cors({ origin: 'http://localhost:8080' }));
 
 const uri = `mongodb+srv://gokcelb:${process.env.MY_PASSWORD}@pricesaroundtheglobe.c9lzx.mongodb.net/${process.env.MY_DATABASE}?retryWrites=true&w=majority`
 const dbClient = new MongoClient(uri);
@@ -31,7 +33,7 @@ app.get('/categories/:category', async (req, res) => {
         console.error(e.message);
         res.status(404).send(e);
     }
-});
+})
 
 app.get('/', async (req, res) => {
     try {
@@ -41,6 +43,16 @@ app.get('/', async (req, res) => {
         res.send(items);
     } catch (e) {
         console.error(e.message);
+        res.status(404).send(e);
+    }
+})
+
+app.get('/search', async (req, res) => {
+    try {
+        const texts = await service.search();
+        res.send(texts);
+    } catch (e) {
+        console.error(e);
         res.status(404).send(e);
     }
 })

@@ -2,6 +2,7 @@
   <div id="app">
     <app-header :collapse="collapse"></app-header>
     <div class="content">
+<!--      Selects start-->
       <div class="selects">
         <span class="help">Select countries and a category to compare prices</span>
         <select class="select" v-model="selectedCountry" @change="addSelectedCountry">
@@ -15,21 +16,21 @@
           <option>Car</option>
         </select>
       </div>
-      <div class="selectedCountry-countries">
-        YOUR SELECTIONS: {{ selectedCountries }}
-      </div>
+<!--      Selects end-->
+<!--      Comparison container starts-->
       <div class="comparison-container" v-if="selectedCountries.length > 0">
           <div class="comparison" v-for="country in selectedCountries" :key="country">
-            <div>
+            <div class="countries">
+              <i class="bi bi-x delete-icon" @click="deleteFromSelected(country)"></i>
               <span>{{ country }}</span>
-              <button id="${country}" @click="deleteFromSelected(country)">x</button>
             </div>
-            <div v-for="(carItem, idx) in queryResponse[country]" :key="idx">
+            <div class="comparison-cards" v-for="(carItem, idx) in queryResponse[country]" :key="idx">
               <comparison-tool :country="carItem.country"></comparison-tool>
             </div>
           </div>
       </div>
-      <!--      car cards start-->
+<!--      Comparison container ends-->
+<!--      Car cards start-->
       <h2 class="help">Search results</h2>
       <div class="search-results" v-for="(value, name) in queryResponse" :key="name">
         <h4>{{ name }}</h4>
@@ -39,7 +40,7 @@
           </li>
         </ul>
       </div>
-      <!--      car cards end-->
+<!--      Car cards end-->
       <right-bar></right-bar>
     </div>
   </div>
@@ -261,8 +262,9 @@ body {
 .comparison-container {
   display: flex;
   width: 100%;
-  height: 230px;
+  height: 210px;
   margin-bottom: 30px;
+  margin-top: 10px;
   overflow: auto;
 }
 
@@ -281,7 +283,26 @@ body {
   margin-right: 20px;
 }
 
-.search-results {
+.delete-icon {
+  cursor: pointer;
+}
 
+.countries {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 3px 6px 3px 2px;
+  border-style: solid;
+  border-color: lightgrey;
+  border-width: 1px;
+  border-radius: 10px;
+  background-color: rgba(250, 249, 249, 0.98);
+}
+
+.comparison-cards {
+  margin-bottom: 5px;
+}
+
+.search-results {
+  margin-top: 25px;
 }
 </style>

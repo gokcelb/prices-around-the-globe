@@ -1,7 +1,6 @@
 <template>
   <div class="comparison-card">
-      <h4>{{ country }}</h4>
-    <p>Items...</p>
+    <p>Items</p>
   </div>
 </template>
 
@@ -19,6 +18,7 @@ export default {
   border-style: solid;
   border-width: 1px;
   border-color: lightgrey;
+  border-radius: 10px;
   height: 100%;
   width: 90%;
   margin: 0;

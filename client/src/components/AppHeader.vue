@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h1>Prices Around The World</h1>
+    <h1>Prices Around The Globe</h1>
     <search></search>
     <nav>
       <ul>

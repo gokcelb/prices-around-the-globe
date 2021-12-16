@@ -45,16 +45,19 @@ export default {
 
 <style scoped>
 .car-card {
-  border-style: solid;
-  border-width: 1px;
-  border-color: lightgrey;
-  box-shadow: 2px 4px lightgrey;
   float: left;
   min-height: 150px;
   height: auto;
   max-width: 180px;
   margin: 2% 1%;
   padding: 10px;
+}
+
+.car-card:hover {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
+  box-shadow: 1px 2px lightgrey;
 }
 
 .car-img {

@@ -21,9 +21,9 @@ $ docker compose up
 
 ## User Interface
 
-Below is an initial design idea of the UI.
+Below is the current design idea of the UI.
 
-![Initial UI design](./.docs/ui1.PNG)
+![Updated UI design](./.docs/ui2.PNG)
 
 ## Design
 

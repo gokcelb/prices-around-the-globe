@@ -19,11 +19,11 @@ export default {
 
 <style scoped>
 .side-bar {
-  height: 270px;
+  height: auto;
+  max-height: 35%;
   width: 12%;
   position: absolute;
   margin-top: 82px;
-  margin-left: 20px;
   top: 0;
   right: 50px;
   padding: 10px 10px;

@@ -2,14 +2,17 @@
   <div class="car-card">
     <img class="car-img" alt="some car" :src="car.imageURL">
     <div class="car-info">
-      <p class="car-title">{{ formattedCarTitle }}</p>
-      <p class="car-price">{{ car.currency }}{{ car.price }}</p>
+      <p>{{ formattedCarTitle }}</p>
+      <p>{{ car.currency }}{{ car.price }}</p>
     </div>
-    <div v-if="show" class="car-details">
-        <p><b>Year</b> {{ car.year }}</p>
-        <p><b>Mileage</b> {{ car.mileage }}</p>
-        <p><b>Fuel Type</b> {{ car.fuel }}</p>
-        <p><b>Engine</b> {{ car.features }}</p>
+    <div class="car-details">
+      <i class="bi arrow" @click="toggleDetails" :class="{'bi-caret-down-fill': isClicked, 'bi-caret-right-fill': !isClicked}">Details</i>
+      <div class="details" v-if="detailsToggled">
+        <p>Year: {{ car.year }}</p>
+        <p>Mileage: {{ car.mileage }}</p>
+        <p>Fuel Type: {{ car.fuel }}</p>
+        <p>Engine: {{ car.features }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -22,11 +25,15 @@ export default {
   },
   data() {
     return {
-      show: false,
+      detailsToggled: false,
+      isClicked: false,
     }
   },
   methods: {
-
+    toggleDetails: function () {
+      this.detailsToggled = !this.detailsToggled;
+      this.isClicked = !this.isClicked;
+    }
   },
   computed: {
     formattedCarTitle: function () {
@@ -41,10 +48,11 @@ export default {
   border-style: solid;
   border-width: 1px;
   border-color: lightgrey;
-  box-shadow: 4px 7px lightgrey;
+  box-shadow: 2px 4px lightgrey;
   float: left;
-  height: 170px;
-  width: 16%;
+  min-height: 150px;
+  height: auto;
+  max-width: 180px;
   margin: 2% 1%;
   padding: 10px;
 }
@@ -58,12 +66,20 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 0 8%;
-}
-
-.car-title {
+  font-size: 14px;
 }
 
 .car-details {
+  margin-left: 10px;
+  margin-top: 10px;
+  color: grey;
+}
 
+.details {
+  margin-left: 15px;
+}
+
+.arrow {
+  cursor: pointer;
 }
 </style>

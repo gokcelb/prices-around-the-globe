@@ -55,9 +55,6 @@ export default {
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css");
 
 .search-container {
-  /*display: flex;*/
-  /*justify-content: center;*/
-  /*height: 40px;*/
   text-align: center;
   width: 25%;
   margin: auto 0;
@@ -79,7 +76,7 @@ input:focus {
 
 .search-button {
   width: 10%;
-  height: 28px;
+  height: 25.6px;
   border-width: 0.5px;
   border-color: lightgrey;
   border-style: solid;

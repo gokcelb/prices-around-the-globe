@@ -4,10 +4,8 @@
     <search></search>
     <nav>
       <ul>
-        <li><a href="">Categories</a></li>
-        <li><a href="">Countries</a></li>
-        <li><a href="">About Us</a></li>
-        <li><a href="">Language</a></li>
+        <li><a @click="collapse" href="">Categories</a></li>
+        <li><a @click="collapse" href="">Countries</a></li>
       </ul>
     </nav>
   </header>
@@ -20,6 +18,16 @@ export default {
   name: 'app-header',
   components: {
     Search,
+  },
+  data() {
+    return {
+      isCollapsed: false,
+    }
+  },
+  methods: {
+    collapse: function() {
+      this.$emit("collapse")
+    }
   }
 }
 </script>
@@ -34,14 +42,14 @@ h1 {
 header {
   display: flex;
   justify-content: space-between;
-  box-shadow: 0 1px lightgrey;
+  box-shadow: 0 1.5px lightgrey;
   height: 60px;
   margin: 0;
   padding: 0;
 }
 
 nav {
-  width: 35%;
+  width: 20%;
 }
 a {
   color: inherit;
@@ -58,4 +66,5 @@ nav > ul {
 nav > ul > li {
   margin: 0 6%;
 }
+
 </style>

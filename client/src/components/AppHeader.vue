@@ -4,8 +4,20 @@
     <search></search>
     <nav>
       <ul>
-        <li><a @click="collapse" href="">Categories</a></li>
-        <li><a @click="collapse" href="">Countries</a></li>
+        <li>
+          <a>Categories</a>
+          <ul>
+            <li><a>Car</a></li>
+          </ul>
+        </li>
+        <li>
+          <a>Countries</a>
+          <ul>
+            <li><a>Turkey</a></li>
+            <li><a>United States</a></li>
+            <li><a>Luxembourg</a></li>
+          </ul>
+        </li>
       </ul>
     </nav>
   </header>
@@ -35,7 +47,7 @@ export default {
 <style scoped>
 h1 {
   color: mediumseagreen;
-  margin: auto 0 auto 10%;
+  margin: auto 0 auto 2%;
   font-size: 22px;
 }
 
@@ -44,27 +56,58 @@ header {
   justify-content: space-between;
   box-shadow: 0 1.5px lightgrey;
   height: 60px;
-  margin: 0;
-  padding: 0;
 }
 
 nav {
   width: 20%;
-}
-a {
-  color: inherit;
-}
-a:link {
-  text-decoration: none;
-}
-
-nav > ul {
   display: flex;
-  margin: 25px 0;
+  margin: auto 0;
+  justify-content: left;
 }
 
-nav > ul > li {
-  margin: 0 6%;
+nav ul {
+  -webkit-transition: .3s;
+  transition: .3s;
+  z-index: 1;
 }
 
+nav ul li {
+  display: inline;
+  position: relative;
+  float: left;
+  width: 140px;
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+nav a {
+  padding: 5px 15px;
+  display: block;
+}
+
+nav ul ul {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  left: 0;
+  top: 100%;
+}
+
+nav li:hover, nav li:hover li {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
+  box-shadow: 1px 2px lightgrey;
+  background-color: rgba(250, 249, 249, 0.98);
+  /*background-color: #ddd;*/
+}
+
+nav li li:hover, nav li li:hover li {
+  background-color: #bbb;
+}
+
+nav li:hover ul {
+  visibility: visible;
+  opacity: 1;
+}
 </style>

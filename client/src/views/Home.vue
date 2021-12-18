@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
+  <div id="home">
     <app-header></app-header>
     <div class="content">
-<!--      Selects start-->
+      <!--      Selects start-->
       <div class="selects">
         <span class="help">Select countries and a category to compare prices</span>
         <select class="select" v-model="selectedCountry" @change="addSelectedCountry">
@@ -16,21 +16,21 @@
           <option>Car</option>
         </select>
       </div>
-<!--      Selects end-->
-<!--      Comparison container starts-->
+      <!--      Selects end-->
+      <!--      Comparison container starts-->
       <div class="comparison-container" v-if="selectedCountries.length > 0">
-          <div class="comparison" v-for="country in selectedCountries" :key="country">
-            <div class="countries">
-              <i class="bi bi-x delete-icon" @click="deleteFromSelected(country)"></i>
-              <span>{{ country }}</span>
-            </div>
-            <div class="comparison-cards" v-for="(carItem, idx) in queryResponse[country]" :key="idx">
-              <comparison-tool :country="carItem.country"></comparison-tool>
-            </div>
+        <div class="comparison" v-for="country in selectedCountries" :key="country">
+          <div class="countries">
+            <i class="bi bi-x delete-icon" @click="deleteFromSelected(country)"></i>
+            <span>{{ country }}</span>
           </div>
+          <div class="comparison-cards" v-for="(carItem, idx) in queryResponse[country]" :key="idx">
+            <comparison-tool :country="carItem.country"></comparison-tool>
+          </div>
+        </div>
       </div>
-<!--      Comparison container ends-->
-<!--      Car cards start-->
+      <!--      Comparison container ends-->
+      <!--      Car cards start-->
       <h2 class="help">Search results</h2>
       <div class="search-results" v-for="(value, name) in queryResponse" :key="name">
         <h4>{{ name }}</h4>
@@ -40,8 +40,8 @@
           </li>
         </ul>
       </div>
-<!--      Car cards end-->
-<!--      <right-bar></right-bar>-->
+      <!--      Car cards end-->
+      <!--      <right-bar></right-bar>-->
     </div>
   </div>
 </template>
@@ -53,7 +53,7 @@ import CarCard from "../components/CarCard.vue";
 import ComparisonTool from "../components/ComparisonTool.vue";
 
 export default {
-  name: "App",
+  name: "Home",
   components: {
     AppHeader,
     CarCard,

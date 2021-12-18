@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h1>Prices Around The Globe</h1>
+    <h1><a href="/">Prices Around The Globe</a></h1>
     <search></search>
     <nav>
       <ul>
@@ -13,9 +13,9 @@
         <li>
           <a>Countries</a>
           <ul>
-            <li><a>Turkey</a></li>
-            <li><a>United States</a></li>
-            <li><a>Luxembourg</a></li>
+            <li><a href="/countries/Turkey">Turkey</a></li>
+            <li><a href="/countries/United-States">United States</a></li>
+            <li><a href="/countries/Luxembourg">Luxembourg</a></li>
           </ul>
         </li>
       </ul>

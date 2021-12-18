@@ -243,18 +243,7 @@ export default {
 };
 </script>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-body {
-  font-family: "Arial",sans-serif;
-  font-size: 12px;
-}
-
+<style scoped>
 .search-results > ul {
   list-style: none;
   display: flex;

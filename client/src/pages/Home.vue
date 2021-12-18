@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <app-header :collapse="collapse"></app-header>
+    <app-header></app-header>
     <div class="content">
 <!--      Selects start-->
       <div class="selects">
@@ -41,7 +41,7 @@
         </ul>
       </div>
 <!--      Car cards end-->
-      <right-bar></right-bar>
+<!--      <right-bar></right-bar>-->
     </div>
   </div>
 </template>
@@ -49,7 +49,7 @@
 <script>
 import AppHeader from "../components/AppHeader.vue";
 import CarCard from "../components/CarCard.vue";
-import RightBar from "../components/RightBar.vue";
+// import RightBar from "../components/RightBar.vue";
 import ComparisonTool from "../components/ComparisonTool.vue";
 
 export default {
@@ -57,7 +57,7 @@ export default {
   components: {
     AppHeader,
     CarCard,
-    RightBar,
+    // RightBar,
     ComparisonTool,
   },
   data() {
@@ -73,60 +73,97 @@ export default {
             make: "Hyundai",
             model: "i20",
             currency: "₺",
-            price: 120000,
+            price: "120,000",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2010",
             fuel: "Diesel",
             features: "2B 2B",
-            mileage: 78000,
+            mileage: "78,000",
           },
           {
             country: "Turkey",
             make: "BMW",
             model: "1 series",
             currency: "₺",
-            price: 300000,
+            price: "300,000",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2000",
             fuel: "Gas",
             features: "2C Pheonix",
-            mileage: 10000,
+            mileage: "10,000",
           },
           {
             country: "Turkey",
             make: "BMW",
             model: "1 series",
             currency: "₺",
-            price: 300000,
+            price: "300,000",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2010",
             fuel: "Diesel",
             features: "2B 2B",
-            mileage: 78000,
+            mileage: "78,000",
           },
           {
             country: "Turkey",
             make: "Hyundai",
             model: "i20",
             currency: "₺",
-            price: 120000,
+            price: "120,000",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2010",
             fuel: "Diesel",
             features: "2B 2B",
-            mileage: 78000,
+            mileage: "78,000",
           },
           {
             country: "Turkey",
             make: "Hyundai",
             model: "i10",
             currency: "₺",
-            price: 100000,
+            price: "100,000",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2010",
             fuel: "Diesel",
             features: "2B 2B",
-            mileage: 78000,
+            mileage: "78,000",
+          },
+
+          {
+            country: "Turkey",
+            make: "Hyundai",
+            model: "i20",
+            currency: "₺",
+            price: "120,000",
+            imageURL: require("../../public/somecar.jpeg"),
+            year: "2010",
+            fuel: "Diesel",
+            features: "2B 2B",
+            mileage: "78,000",
+          },
+          {
+            country: "Turkey",
+            make: "Hyundai",
+            model: "i20",
+            currency: "₺",
+            price: "120,000",
+            imageURL: require("../../public/somecar.jpeg"),
+            year: "2010",
+            fuel: "Diesel",
+            features: "2B 2B",
+            mileage: "78,000",
+          },
+          {
+            country: "Turkey",
+            make: "Hyundai",
+            model: "i20",
+            currency: "₺",
+            price: "120,000",
+            imageURL: require("../../public/somecar.jpeg"),
+            year: "2010",
+            fuel: "Diesel",
+            features: "2B 2B",
+            mileage: "78,000",
           },
         ],
         "United States": [
@@ -134,25 +171,25 @@ export default {
             country: "United States",
             make: "Ford",
             model: "Focus",
-            currency: "₺",
-            price: 135000,
+            currency: "$",
+            price: "13,500",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2010",
             fuel: "Diesel",
             features: "2B 2B",
-            mileage: 78000,
+            mileage: "78,000",
           },
           {
             country: "United States",
             make: "BMW",
             model: "1 series",
-            currency: "₺",
-            price: 300000,
+            currency: "$",
+            price: "43,000",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2010",
             fuel: "Diesel",
             features: "2B 2B",
-            mileage: 78000,
+            mileage: "78,000",
           },
         ],
         Luxembourg: [
@@ -160,25 +197,25 @@ export default {
             country: "Luxembourg",
             make: "BMW",
             model: "1 series",
-            currency: "₺",
-            price: 300000,
+            currency: "€",
+            price: "28,000",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2010",
             fuel: "Diesel",
             features: "2B 2B",
-            mileage: 78000,
+            mileage: "78,000",
           },
           {
             country: "Luxembourg",
             make: "BMW",
             model: "1 series",
-            currency: "₺",
-            price: 300000,
+            currency: "€",
+            price: "28,000",
             imageURL: require("../../public/somecar.jpeg"),
             year: "2010",
             fuel: "Diesel",
             features: "2B 2B",
-            mileage: 78000,
+            mileage: "78,000",
           },
         ]
       },
@@ -202,15 +239,6 @@ export default {
       }
       this.selectedCountries = this.newSelectedCountries.slice();
     },
-    onQueryResult: function (response) {
-      console.log(response);
-    },
-    mockSearchQuery: function (query) {
-      return {query}
-    },
-    collapse: function () {
-      this.isCollapsed = true;
-    }
   },
 };
 </script>
@@ -224,22 +252,23 @@ export default {
 
 body {
   font-family: "Arial",sans-serif;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .search-results > ul {
   list-style: none;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .search-results > ul > li {
-  margin: 10px 30px 10px 0;
+  margin: 10px 20px 10px 0;
 }
 
 .content {
   float: left;
-  width: 77%;
-  margin: 0 0 0 40px;
+  width: 90%;
+  margin: 0 5%;
 }
 
 .selects {
@@ -247,7 +276,6 @@ body {
   height: 50px;
   display: flex;
   justify-content: right;
-  margin-right: 3%;
 }
 
 .select {
@@ -262,16 +290,15 @@ body {
 .comparison-container {
   display: flex;
   width: 100%;
-  height: 210px;
+  height: auto;
   margin-bottom: 30px;
   margin-top: 10px;
-  overflow: auto;
 }
 
 .comparison {
   float: left;
   width: 30%;
-  margin-right: 5%;
+  margin-right: 3%;
 }
 
 .help {

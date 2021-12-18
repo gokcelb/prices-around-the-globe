@@ -69,7 +69,7 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 0 8%;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .car-details {

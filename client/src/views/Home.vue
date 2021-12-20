@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <app-header></app-header>
+    <app-header @onQuery="query"></app-header>
     <div class="content">
       <!--      Selects start-->
       <div class="selects">
@@ -51,6 +51,7 @@ import AppHeader from "../components/AppHeader.vue";
 import CarCard from "../components/CarCard.vue";
 // import RightBar from "../components/RightBar.vue";
 import ComparisonTool from "../components/ComparisonTool.vue";
+import axios from "axios";
 
 export default {
   name: "Home",
@@ -239,6 +240,15 @@ export default {
       }
       this.selectedCountries = this.newSelectedCountries.slice();
     },
+    query: async function (value) {
+      console.log('went into QUERY')
+      try {
+        const { data } = await axios.get(`http://localhost:5000/q=${encodeURI(value)}`);
+        console.log(data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
   },
 };
 </script>

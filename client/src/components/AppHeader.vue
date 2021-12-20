@@ -1,13 +1,13 @@
 <template>
   <header>
     <h1><a href="/">Prices Around The Globe</a></h1>
-    <search></search>
+    <search v-on="$listeners"></search>
     <nav>
       <ul>
         <li>
           <a>Categories</a>
           <ul>
-            <li><a>Car</a></li>
+            <li><a href="/categories/car">Car</a></li>
           </ul>
         </li>
         <li>

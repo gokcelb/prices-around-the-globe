@@ -6,13 +6,13 @@
       placeholder="Search for a commodity"
       autocomplete="auto"
     />
-    <button class="search-button" @click="query"><i class="bi bi-search icon"></i></button>
+    <button class="search-button" @click="onQuery"><i class="bi bi-search icon"></i></button>
 <!--    <p>{{ recommendations }}</p>-->
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import {getSearchTexts} from "../api.js";
 
 export default {
   name: "search",
@@ -26,19 +26,18 @@ export default {
     };
   },
   methods: {
-    query: function () {
-      this.$emit('query', this.searchQuery(this.searchValue));
+    onQuery: function () {
+      this.$emit('onQuery', this.searchValue);
     },
     onType: async function(event) {
       try {
         if (event.key === "Enter") {
-          this.query();
+          this.onQuery();
           return;
         }
         if(this.searchValue < 2) return;
         if(this.recommendations.length === 0) {
-          const { data } = await axios.get('http://localhost:5000/search');
-          console.log(data);
+          const data = await getSearchTexts();
           this.recommendations.push(...data);
         } else {
           // execute autocomplete logic with the data you have
@@ -66,6 +65,7 @@ export default {
   border-width: 0.5px;
   border-color: lightgrey;
   border-style: solid;
+  padding-left: 5px;
 }
 
 input:focus {

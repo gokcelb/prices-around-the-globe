@@ -1,9 +1,10 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home'
-import Country from '../views/Country'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '../views/Home';
+import Country from '../views/Country';
+import Category from "../views/Category";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
@@ -15,6 +16,11 @@ const routes = [
     path: '/countries/:country',
     name: 'Country',
     component: Country
+  },
+  {
+    path: '/categories/:category',
+    name: 'Category',
+    component: Category
   }
 ]
 

@@ -1,6 +1,6 @@
 <template>
   <div class="car-card">
-    <img class="car-img" alt="some car" :src="car.imageURL">
+    <img class="car-img" alt="some car" src="../../public/somecar.jpeg">
     <div class="car-info">
       <p>{{ formattedCarTitle }}</p>
       <p>{{ car.currency }}{{ car.price }}</p>
@@ -8,14 +8,23 @@
     <div class="car-details">
       <i class="bi arrow" @click="toggleDetails" :class="{'bi-caret-down-fill': isClicked, 'bi-caret-right-fill': !isClicked}">Details</i>
       <div class="details" v-if="detailsToggled">
-        <p>Year: {{ car.year }}</p>
-        <p>Mileage: {{ car.mileage }}</p>
-        <p>Fuel Type: {{ car.fuel }}</p>
-        <p>Engine: {{ car.features }}</p>
+        <div v-if="car.year">
+          <p>Year: {{ car.year }}</p>
+        </div>
+        <div v-if="car.mileage">
+          <p>Mileage: {{ car.mileage }}</p>
+        </div>
+        <div v-if="car.fuel">
+          <p>Fuel Type: {{ car.fuel }}</p>
+        </div>
+        <div v-if="car.features">
+          <p>Engine: {{ car.features }}</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script>
 export default {

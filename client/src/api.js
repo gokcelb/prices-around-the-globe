@@ -1,17 +1,17 @@
 import axios from 'axios';
 
-export async function getCategoryItems(category) {
+export async function getAllCategoryItems(category) {
     try {
-        const { data } = await axios.get(`http://localhost:5000/categories/${category}?iso=lu`);
+        const { data } = await axios.get(`http://localhost:5000/categories/${category}`);
         return data;
     } catch (e) {
         console.error(e);
     }
 }
 
-export async function getCategoryItemsWithCountry(category, country) {
+export async function getCategoryItemsWithCountry(category) {
     try {
-        const { data } = await axios.get(`http://localhost:5000/categories/${category}?iso=${country}`);
+        const { data } = await axios.get(`http://localhost:5000/categories/${category}?iso=us`);
         return data;
     } catch (e) {
         console.error(e);

@@ -1,6 +1,27 @@
 <template>
   <div class="comparison-card">
-    <p>Items</p>
+    <!--    <img class="car-img" alt="some car" src="../../public/somecar.jpeg">-->
+    <div class="car-info">
+      <p>{{ car.make }}</p>
+      <p>{{ car.currency }}{{ car.price }}</p>
+    </div>
+    <div class="car-details">
+      <i class="bi arrow" @click="toggleDetails" :class="{'bi-caret-down-fill': isClicked, 'bi-caret-right-fill': !isClicked}">Details</i>
+      <div class="details" v-if="detailsToggled">
+        <div v-if="car.modelFeatures">
+          <p><span class="details-title">Model</span>: {{ car.modelFeatures }}</p>
+        </div>
+        <div v-if="car.year">
+          <p><span class="details-title">Year</span>: {{ car.year }}</p>
+        </div>
+        <div v-if="car.mileage">
+          <p><span class="details-title">Mileage</span>: {{ car.mileage }}</p>
+        </div>
+        <div v-if="car.fuel">
+          <p><span class="details-title">Fuel Type</span>: {{ car.fuel }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -8,7 +29,19 @@
 export default {
   name: "comparison-tool",
   props: {
-    country: String
+    car: Object,
+  },
+  data () {
+    return {
+      detailsToggled: false,
+      isClicked: false,
+    }
+  },
+  methods: {
+    toggleDetails: function () {
+      this.detailsToggled = !this.detailsToggled;
+      this.isClicked = !this.isClicked;
+    },
   }
 }
 </script>
@@ -23,5 +56,21 @@ export default {
   width: 90%;
   margin: 0;
   padding: 10px;
+}
+
+.car-info {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.car-details {
+  margin-top: 5px;
+  color: grey;
+}
+
+.arrow {
+  cursor: pointer;
 }
 </style>

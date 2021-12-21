@@ -11,9 +11,9 @@
           <option>United States</option>
           <option>Luxembourg</option>
         </select>
-        <select class="select" v-model="selectedCategory">
+        <select class="select" v-model="selectedCategory" @change="list">
           <option disabled value="">Select a category</option>
-          <option>Car</option>
+          <option>car</option>
         </select>
       </div>
       <!--      Selects end-->
@@ -24,15 +24,15 @@
             <i class="bi bi-x delete-icon" @click="deleteFromSelected(country)"></i>
             <span>{{ country }}</span>
           </div>
-          <div class="comparison-cards" v-for="(carItem, idx) in queryResponse[country]" :key="idx">
-            <comparison-tool :country="carItem.country"></comparison-tool>
+          <div class="comparison-cards" v-for="(carItem, idx) in listResponse[country]" :key="idx">
+            <comparison-tool :car="carItem"></comparison-tool>
           </div>
         </div>
       </div>
       <!--      Comparison container ends-->
       <!--      Car cards start-->
       <h2 class="help">Search results</h2>
-      <div class="search-results" v-for="(value, name) in queryResponse" :key="name">
+      <div class="search-results" v-for="(value, name) in listResponse" :key="name">
         <h4>{{ name }}</h4>
         <ul>
           <li v-for="(carItem, idx) in value" :key="idx">
@@ -52,6 +52,8 @@ import CarCard from "../components/CarCard.vue";
 // import RightBar from "../components/RightBar.vue";
 import ComparisonTool from "../components/ComparisonTool.vue";
 import axios from "axios";
+import {getAllCategoryItems} from "../api.js";
+import {encodeByCountry} from "../utils.js";
 
 export default {
   name: "Home",
@@ -67,146 +69,8 @@ export default {
       selectedCountries: [],
       newSelectedCountries: [],
       selectedCategory: '',
-      queryResponse: {
-        Turkey: [
-          {
-            country: "Turkey",
-            make: "Hyundai",
-            modelFeatures: "i20 2B 2B",
-            currency: "₺",
-            price: "120,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-          {
-            country: "Turkey",
-            make: "BMW",
-            modelFeatures: "1 series 2C Pheonix",
-            currency: "₺",
-            price: "300,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2000",
-            fuel: "Gas",
-            mileage: "10,000",
-          },
-          {
-            country: "Turkey",
-            make: "BMW",
-            modelFeatures: "1 series 2B 2B",
-            currency: "₺",
-            price: "300,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-          {
-            country: "Turkey",
-            make: "Hyundai",
-            modelFeatures: "i20",
-            currency: "₺",
-            price: "120,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-          {
-            country: "Turkey",
-            make: "Hyundai",
-            modelFeatures: "i10",
-            currency: "₺",
-            price: "100,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-          {
-            country: "Turkey",
-            make: "Hyundai",
-            modelFeatures: "i20 2B 2B",
-            currency: "₺",
-            price: "120,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-          {
-            country: "Turkey",
-            make: "Hyundai",
-            modelFeatures: "i20 2C Pheonix",
-            currency: "₺",
-            price: "120,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-          {
-            country: "Turkey",
-            make: "Hyundai",
-            modelFeatures: "i20 2B 2B",
-            currency: "₺",
-            price: "120,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-        ],
-        "United States": [
-          {
-            country: "United States",
-            make: "Ford",
-            modelFeatures: "Focus SCX 1.0",
-            currency: "$",
-            price: "13,500",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-          {
-            country: "United States",
-            make: "BMW",
-            modelFeatures: "1 series",
-            currency: "$",
-            price: "43,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-        ],
-        Luxembourg: [
-          {
-            country: "Luxembourg",
-            make: "BMW",
-            modelFeatures: "1 series",
-            currency: "€",
-            price: "28,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-          {
-            country: "Luxembourg",
-            make: "BMW",
-            modelFeatures: "1 series",
-            currency: "€",
-            price: "28,000",
-            imageURL: require("../../public/somecar.jpeg"),
-            year: "2010",
-            fuel: "Diesel",
-            mileage: "78,000",
-          },
-        ]
-      },
+      listResponse: {},
+      bothSelectsChecked: false,
     };
   },
   methods: {
@@ -235,8 +99,16 @@ export default {
       } catch (e) {
         console.error(e);
       }
+    },
+    list: async function () {
+      const items = await getAllCategoryItems(this.selectedCategory);
+      this.listResponse = encodeByCountry(items);
+      console.log(this.listResponse)
     }
   },
+  mounted () {
+    // this.list();
+  }
 };
 </script>
 

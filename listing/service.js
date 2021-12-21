@@ -17,11 +17,14 @@ class ListingService {
             if (iso) {
                 items = await this.repository.findByCategory(category, iso);
             } else {
+                const allItems = [];
                 for (let i = 0; i < this.isoList.length; i++) {
                     let currIso = this.isoList[i];
                     items = await this.repository.findByCategory(category, currIso);
                     if (items.length === 0) break;
+                    allItems.push(...items);
                 }
+                return allItems;
             }
 
             if (!items || items.length === 0) {

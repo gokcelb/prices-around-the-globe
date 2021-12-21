@@ -2,6 +2,7 @@ require('dotenv/config');
 const express = require('express');
 const { Repository } = require('./repository');
 const { ScraperRepository } = require('./scraperRepository');
+const { Formatter } = require("./formatter");
 const { ListingService } = require('./service');
 const { MongoClient } = require("mongodb");
 const httpClient = require('axios');
@@ -20,8 +21,9 @@ run();
 
 const repository = new Repository(dbClient);
 const scraperRepository = new ScraperRepository(httpClient);
+const formatter = new Formatter();
 const isoList = ['tr', 'us', 'lu'];
-const service = new ListingService(repository, scraperRepository, isoList);
+const service = new ListingService(repository, scraperRepository, formatter, isoList);
 
 app.get('/categories/:category', async (req, res) => {
     try {

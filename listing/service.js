@@ -1,11 +1,13 @@
 class ListingService {
     repository;
     scraperRepository;
+    formatter;
     isoList;
 
-    constructor(repository, scraperRepository, isoList) {
+    constructor(repository, scraperRepository, formatter, isoList) {
         this.repository = repository;
         this.scraperRepository = scraperRepository;
+        this.formatter = formatter;
         this.isoList = isoList;
     }
 
@@ -24,8 +26,10 @@ class ListingService {
 
             if (!items || items.length === 0) {
                 items = await this.scraperRepository.scrape(iso);
+                console.log(items)
 
                 if (items.length > 0) {
+                    items = this.formatter.formatProperties(items);
                     this.repository.saveWithCategory(category, items);
                 }
             }

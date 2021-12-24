@@ -21,9 +21,9 @@ $ docker compose up
 
 ## User Interface
 
-Below is the current design idea of the UI.
+Below is the current design idea of the UI. You can see the comparison tool and categories:car sections.
 
-![Updated UI design](./.docs/ui2.PNG)
+![Updated UI design](./.docs/ui3.gif)
 
 ## Design
 

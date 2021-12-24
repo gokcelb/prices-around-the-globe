@@ -16,3 +16,7 @@ export function encodeByCountry(items) {
     }
     return encodedItems;
 }
+
+export function paginate(items, itemsPerPage, page) {
+    return items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+}

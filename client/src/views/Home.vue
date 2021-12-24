@@ -11,7 +11,7 @@
           <option>United States</option>
           <option>Luxembourg</option>
         </select>
-        <select class="select" v-model="selectedCategory" @change="list">
+        <select class="select" v-model="selectedCategory" @change="retrieve(pageNo)">
           <option disabled value="">Select a category</option>
           <option>car</option>
         </select>
@@ -27,6 +27,10 @@
           <div class="comparison-cards" v-for="(carItem, idx) in listResponse[country]" :key="idx">
             <comparison-tool :car="carItem"></comparison-tool>
           </div>
+        </div>
+        <div class="up-down-container">
+          <i class="bi bi-arrow-up-circle up-down" @click="pageNo > 1 ? pageNo-- : null; list(pageNo)"></i>
+          <i class="bi bi-arrow-down-circle up-down" @click="pageNo++; list(pageNo)"></i>
         </div>
       </div>
       <!--      Comparison container ends-->
@@ -53,7 +57,7 @@ import CarCard from "../components/CarCard.vue";
 import ComparisonTool from "../components/ComparisonTool.vue";
 import axios from "axios";
 import {getAllCategoryItems} from "../api.js";
-import {encodeByCountry} from "../utils.js";
+import {encodeByCountry, paginate} from "../utils.js";
 
 export default {
   name: "Home",
@@ -69,8 +73,10 @@ export default {
       selectedCountries: [],
       newSelectedCountries: [],
       selectedCategory: '',
+      retrieveResponse: [],
       listResponse: {},
       bothSelectsChecked: false,
+      pageNo: 1,
     };
   },
   methods: {
@@ -100,15 +106,18 @@ export default {
         console.error(e);
       }
     },
-    list: async function () {
-      const items = await getAllCategoryItems(this.selectedCategory);
-      this.listResponse = encodeByCountry(items);
-      console.log(this.listResponse)
-    }
+    retrieve: async function (pageNo) {
+      this.retrieveResponse = await getAllCategoryItems(this.selectedCategory);
+      this.list(pageNo);
+    },
+    list: function (pageNo) {
+      const encodedItems = encodeByCountry(this.retrieveResponse);
+      for (const [key, value] of Object.entries(encodedItems)) {
+        encodedItems[key] = paginate(value, 5, pageNo);
+      }
+      this.listResponse = encodedItems;
+    },
   },
-  mounted () {
-    // this.list();
-  }
 };
 </script>
 
@@ -187,6 +196,23 @@ export default {
   margin-bottom: 5px;
 }
 
+.up-down-container {
+  width: 18px;
+  margin: auto 0;
+}
+
+.up-down {
+ display: inline-block;
+  margin: 3px 0;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: rgba(250, 249, 249, 0.98);
+  border-radius: 50%;
+}
+
+.up-down:hover {
+  background-color: lightgrey;
+}
 .search-results {
   margin-top: 25px;
 }

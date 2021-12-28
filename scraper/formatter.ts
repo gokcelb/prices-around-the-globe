@@ -28,6 +28,9 @@ export class DefaultFormatter implements Formatter {
   }
 
   format(text: string): string {
+    if (!text) {
+      return '';
+    }
     return text.trim();
   }
 }
@@ -45,11 +48,11 @@ export class PriceFormatter implements Formatter {
   }
 
   format(text: string): number {
-    if (this.containsNumber(text) === false) return -1;
+    if (!this.containsNumber(text)) return -1;
 
     const newText = text.replace(',', '.');
     const lastDotIdx = newText.lastIndexOf('.');
-    return this.deleteUnnecessary(newText, lastDotIdx);
+    return PriceFormatter.deleteUnnecessary(newText, lastDotIdx);
   }
 
   private containsNumber(text: string): boolean {
@@ -62,7 +65,7 @@ export class PriceFormatter implements Formatter {
     return false;
   }
 
-  private deleteUnnecessary(text: string, idx: number): number {
+  private static deleteUnnecessary(text: string, idx: number): number {
     let newText = '';
     for (let i = 0; i < text.length; i++) {
       if (text[i] !== '.' && (text[i].charCodeAt(0) < 48 || text[i].charCodeAt(0) > 57)) {

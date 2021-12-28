@@ -32,13 +32,12 @@ app.get('/text', async (req, res) => {
   }
   try {
     const linkedScrapeResponse = await scraperService.scrapeLinked(linkedScraperQuery.iso, linkedScraperQuery.format);
-    const cleanedResponse = linkedScrapeResponse.filter(value => Object.keys(value).length !== 0);
+    const cleanedResponse = clean(linkedScrapeResponse);
     res.send(cleanedResponse);
     return;
   } catch (e) {
     res.status(404).send(notFoundErr);
     console.error(e);
-    
   }
 })
 
@@ -49,10 +48,8 @@ app.get('/query', async (req, res) => {
     format: req.query.format as string,
   }
   try {
-    const linkedScrapeResponse = await scraperService.scrapeLinked(
-      linkedScraperQuery.iso, linkedScraperQuery.format, linkedScraperQuery.q
-      );
-    const cleanedResponse = linkedScrapeResponse.filter(value => Object.keys(value).length !== 0);
+    const linkedScrapeResponse = await scraperService.scrapeLinked(linkedScraperQuery.iso, linkedScraperQuery.format, linkedScraperQuery.q);
+    const cleanedResponse = clean(linkedScrapeResponse);
     res.send(cleanedResponse);
     return;
   } catch (e) {
@@ -72,4 +69,8 @@ function saveMockData(): void {
     const info: ScrapeInformation = data[i];
     scraperRepository.save(info);
   }
+}
+
+function clean(response: object[]): object[] {
+  return response.filter(value => Object.keys(value).length !== 0)
 }

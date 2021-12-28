@@ -50,7 +50,7 @@ export class ScraperService {
     return idx;
   }
 
-  async scrapeLinked(iso: string | null, category: string | null, currencyFormat: string, query?: string): Promise<object[]> {
+  async scrapeLinked(iso: string | null, currencyFormat: string, query?: string): Promise<object[]> {
     const viableScraperType = query ? ScraperType.QUERY : ScraperType.TEXT;
     const ids = this.getIdFromIso(iso, viableScraperType);
     const results: object[] = [];

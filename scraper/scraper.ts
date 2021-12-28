@@ -100,7 +100,6 @@ export class TextScraper extends Scraper<object> {
                 const children = this.findChildren(loadedCheerio, branch.children);
                 const resolver = functionFactory(branch.out);
                 object[branch.key] = resolver(children, branch.out);
-                console.log(object[branch.key])
             });
             result.push(object);
         });
@@ -108,7 +107,7 @@ export class TextScraper extends Scraper<object> {
     }
 }
 
-type opFunction = (n: cheerio.Cheerio<cheerio.Node>, s: string) => any
+type opFunction = (n: cheerio.Cheerio<cheerio.Node>, s: string) => any;
 
 const functions:Map<String, opFunction> = new Map<String, opFunction>([
     ['attr', attr],
@@ -116,12 +115,12 @@ const functions:Map<String, opFunction> = new Map<String, opFunction>([
 ])
 
 function functionFactory(out: string): Function {
-    const [op, _] = out.split('.')
+    const [op, _] = out.split('.');
     return functions.get(op)??text;
 }
 
-function text(node: cheerio.Cheerio<cheerio.Node>) {
-    return node.text()
+function text(node: cheerio.Cheerio<cheerio.Node>): any {
+    return node.text();
 }
 
 function attr(node: cheerio.Cheerio<cheerio.Node>, out: string): any {

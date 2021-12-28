@@ -11,6 +11,7 @@ export enum ScraperType {
 export interface Branch {
   key: string;
   children: string[];
+  out: string;
 }
 
 export interface ScrapeInformation {

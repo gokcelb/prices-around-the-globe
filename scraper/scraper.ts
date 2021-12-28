@@ -2,7 +2,6 @@ import * as cheerio from 'cheerio';
 import HttpClient from "./client";
 
 export class ScraperFactory {
-    // burada stringle ollustrma yapmak lazim formatterdaki gibi
     createAttrScraper(baseURL: string, attribute: string): AttrScraper {
         const httpClient = new HttpClient(baseURL);
         return new AttrScraper(httpClient).attr(attribute);
@@ -72,15 +71,17 @@ export class AttrScraper extends Scraper<string> {
 interface Branch {
     children: string[];
     key: string;
+    out: string;
 }
 
 export class TextScraper extends Scraper<object> {
     private branches: Branch[] = [];
 
-    branch(children: string[], key: string): TextScraper {
+    branch(children: string[], key: string, out: string = "text"): TextScraper {
         this.branches.push({
             children: children,
-            key: key
+            key: key,
+            out: out
         });
         return this;
     }
@@ -96,13 +97,33 @@ export class TextScraper extends Scraper<object> {
             const object: any = {};
 
             this.branches.forEach(branch => {
-                const value = this.findChildren(loadedCheerio, branch.children).text();
-                object[branch.key] = value;
+                const children = this.findChildren(loadedCheerio, branch.children);
+                const resolver = functionFactory(branch.out);
+                object[branch.key] = resolver(children, branch.out);
+                console.log(object[branch.key])
             });
-            
             result.push(object);
         });
-
         return result;
     }
+}
+
+type opFunction = (n: cheerio.Cheerio<cheerio.Node>, s: string) => any
+
+const functions:Map<String, opFunction> = new Map<String, opFunction>([
+    ['attr', attr],
+    ['text', text],
+])
+
+function functionFactory(out: string): Function {
+    const [op, _] = out.split('.')
+    return functions.get(op)??text;
+}
+
+function text(node: cheerio.Cheerio<cheerio.Node>) {
+    return node.text()
+}
+
+function attr(node: cheerio.Cheerio<cheerio.Node>, out: string): any {
+    return node.attr(out.split('.')[1]);
 }

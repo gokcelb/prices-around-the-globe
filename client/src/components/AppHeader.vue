@@ -78,6 +78,7 @@ nav ul li {
   width: 140px;
   -webkit-transition: .3s;
   transition: .3s;
+  border-radius: 5px;
 }
 
 nav a {

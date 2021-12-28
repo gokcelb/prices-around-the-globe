@@ -1,6 +1,5 @@
 <template>
   <div class="comparison-card">
-    <!--    <img class="car-img" alt="some car" src="../../public/somecar.jpeg">-->
     <div class="car-info">
       <p>{{ car.make }}</p>
       <p>{{ car.currency }}{{ car.price }}</p>
@@ -19,6 +18,9 @@
         </div>
         <div v-if="car.fuel">
           <p><span class="details-title">Fuel Type</span>: {{ car.fuel }}</p>
+        </div>
+        <div v-if="car.imageURL">
+          <p><span class="details-title">Image</span>: <a target="_blank" style="text-decoration: underline" :href="car.imageURL">Click to see image</a></p>
         </div>
       </div>
     </div>

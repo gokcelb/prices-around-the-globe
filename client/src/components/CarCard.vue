@@ -1,6 +1,6 @@
 <template>
   <div class="car-card">
-<!--    <img class="car-img" alt="some car" src="../../public/somecar.jpeg">-->
+    <a :href="car.imageURL" target="_blank"><img class="car-img" alt="Car Image" :src="car.imageURL"></a>
     <div class="car-info">
       <p>{{ car.make }}</p>
       <p>{{ car.currency }}{{ car.price }}</p>
@@ -56,8 +56,8 @@ export default {
   float: left;
   min-height: 50px;
   height: auto;
-  max-width: 150px;
-  width: 150px;
+  max-width: 180px;
+  width: 180px;
   margin: 2% 1%;
   padding: 10px;
 }
@@ -70,7 +70,7 @@ export default {
 }
 
 .car-img {
-  height: 60%;
+  height: auto;
   width: 90%;
 }
 
@@ -99,4 +99,10 @@ export default {
 .arrow {
   cursor: pointer;
 }
+
+
+img {
+  border-radius: 5px;
+}
+
 </style>

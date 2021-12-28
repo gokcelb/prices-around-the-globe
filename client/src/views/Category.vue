@@ -17,7 +17,7 @@
 <script>
 import AppHeader from "../components/AppHeader";
 import CarCard from "../components/CarCard";
-import {getCategoryItemsWithCountry} from "../api";
+import {getAllCategoryItems} from "../api";
 
 export default {
   name: "Category",
@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     retrieveCategoryItems: async function () {
-      this.results = await getCategoryItemsWithCountry(this.category);
+      this.results = await getAllCategoryItems(this.category);
     },
   },
   computed: {

@@ -7,7 +7,6 @@
         <span class="help">Select countries and a category to compare prices</span>
         <select class="select" v-model="selectedCountry" @change="addSelectedCountry">
           <option disabled value="">Select a country</option>
-          <option>Turkey</option>
           <option>United States</option>
           <option>Luxembourg</option>
         </select>
@@ -35,14 +34,15 @@
       </div>
       <!--      Comparison container ends-->
       <!--      Car cards start-->
-      <h2 class="help">Search results</h2>
-      <div class="search-results" v-for="(value, name) in listResponse" :key="name">
-        <h4>{{ name }}</h4>
-        <ul>
-          <li v-for="(carItem, idx) in value" :key="idx">
-            <car-card :car="carItem"></car-card>
-          </li>
-        </ul>
+      <div v-if="queryResponse.length > 0">
+        <h2 class="help">Search results</h2>
+        <div class="search-results">
+          <ul>
+            <li v-for="(carItem, idx) in queryResponse" :key="idx">
+              <car-card :car="carItem"></car-card>
+            </li>
+          </ul>
+        </div>
       </div>
       <!--      Car cards end-->
       <!--      <right-bar></right-bar>-->
@@ -55,8 +55,7 @@ import AppHeader from "../components/AppHeader.vue";
 import CarCard from "../components/CarCard.vue";
 // import RightBar from "../components/RightBar.vue";
 import ComparisonTool from "../components/ComparisonTool.vue";
-import axios from "axios";
-import {getAllCategoryItems} from "../api.js";
+import {getAllCategoryItems, getQueryItems} from "../api.js";
 import {encodeByCountry, paginate} from "../utils.js";
 
 export default {
@@ -75,6 +74,7 @@ export default {
       selectedCategory: '',
       retrieveResponse: [],
       listResponse: {},
+      queryResponse: [],
       bothSelectsChecked: false,
       pageNo: 1,
     };
@@ -98,13 +98,8 @@ export default {
       this.selectedCountries = this.newSelectedCountries.slice();
     },
     query: async function (value) {
-      console.log('went into QUERY')
-      try {
-        const { data } = await axios.get(`http://localhost:5000/q=${encodeURI(value)}`);
-        console.log(data);
-      } catch (e) {
-        console.error(e);
-      }
+      this.queryResponse = await getQueryItems(value);
+      console.log(this.queryResponse)
     },
     retrieve: async function (pageNo) {
       this.retrieveResponse = await getAllCategoryItems(this.selectedCategory);
@@ -117,7 +112,16 @@ export default {
       }
       this.listResponse = encodedItems;
     },
+    initSelect: function () {
+      this.selectedCategory = "car";
+      this.selectedCountries = ["United States", "Luxembourg"];
+      this.bothSelectsChecked = true;
+      this.retrieve(this.pageNo);
+    }
   },
+  mounted() {
+    this.initSelect();
+  }
 };
 </script>
 
@@ -174,6 +178,7 @@ export default {
   font-weight: 600;
   align-self: center;
   margin-top: 20px;
+  margin-left: 10px;
   margin-right: 20px;
 }
 
@@ -215,5 +220,15 @@ export default {
 }
 .search-results {
   margin-top: 25px;
+}
+
+.search-results > ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.search-results > ul > li {
+  margin: 10px 20px 10px 0;
 }
 </style>

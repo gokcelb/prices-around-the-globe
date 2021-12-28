@@ -162,7 +162,7 @@
           "img"
         ],
         "key": "imageURL",
-        "out": "attr.src"
+        "out": "attr.data-src"
       },
       {
         "children":[

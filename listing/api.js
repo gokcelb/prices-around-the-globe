@@ -22,7 +22,7 @@ run();
 const repository = new Repository(dbClient);
 const scraperRepository = new ScraperRepository(httpClient);
 const formatter = new Formatter();
-const isoList = ['tr', 'us', 'lu'];
+const isoList = ['us', 'lu'];
 const service = new ListingService(repository, scraperRepository, formatter, isoList);
 
 app.get('/categories/:category', async (req, res) => {

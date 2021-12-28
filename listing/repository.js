@@ -6,7 +6,7 @@ class Repository {
   }
 
   async findByCategory(category, iso) {
-    const cursor = await this.client.db('listing').collection('car').find({category: category, iso: iso});
+    const cursor = await this.client.db('listing').collection(category).find({category: category, iso: iso});
     return await cursor.toArray();
   }
 

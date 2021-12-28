@@ -29,12 +29,8 @@ class ListingService {
 
             if (!items || items.length === 0) {
                 items = await this.scraperRepository.scrape(iso);
-                console.log(items)
-
-                if (items.length > 0) {
-                    items = this.formatter.formatProperties(items);
-                    this.repository.saveWithCategory(category, items);
-                }
+                items = this.formatter.formatProperties(items);
+                this.repository.saveWithCategory(category, items);
             }
             return items;
         } catch (err) {
@@ -49,31 +45,31 @@ class ListingService {
             if (iso) {
                 items = await this.repository.findByQuery(query, iso);
             } else {
+                const allItems = [];
                 for (let i = 0; i < this.isoList.length; i++) {
                     let currIso = this.isoList[i];
                     items = await this.repository.findByQuery(query, currIso);
                     if (items.length === 0) break;
+                    allItems.push(...items);
                 }
+                return allItems;
             }
 
             if (!items || items.length === 0) {
                 items = await this.scraperRepository.query(query, iso);
-
                 items.forEach(item => {
                     const propertyNames = Object.getOwnPropertyNames(item);
                     const propertyValues = [];
                     for (let i = 0; i < propertyNames.length; i++) {
                         let name = propertyNames[i];
-                        const willNotInclude = ['price', 'mileage', 'currency', 'category', 'iso'];
+                        const willNotInclude = ['price', 'mileage', 'currency', 'category', 'iso', 'imageURL'];
                         if (willNotInclude.includes(name)) continue;
                         propertyValues.push(item[name]);
                     }
                     item['textSearch'] = propertyValues.join(' ');
                 });
-
-                if (items.length > 0) {
-                    this.repository.save(items);
-                }
+                items = this.formatter.formatProperties(items);
+                this.repository.save(items);
             }
             return items;
         }

@@ -13,6 +13,16 @@
       {
         "children": [
           ".row",
+          "div.result__visual-wrapper.col-xs-12",
+          "div.result__visual",
+          "img"
+        ],
+        "key": "imageURL",
+        "out": "attr.data-src"
+      },
+      {
+        "children": [
+          ".row",
           ".result__details",
           ".result__name",
           ".result__brand"
@@ -44,56 +54,7 @@
           ".result__characteristics",
           ".result__model"
         ],
-        "key": "characteristics"
-      }
-    ]
-  },
-  {
-    "id": "arabalar1",
-    "iso": "tr",
-    "baseURL": "http://www.arabalar.com.tr/araba-fiyatlari",
-    "selector": "#fiyatlar .marka",
-    "type": 0,
-    "subtype": 1,
-    "next": "arabalar2",
-    "parent": null,
-    "queryAttr": ".name h2 a",
-    "attr": "href"
-  },
-  {
-    "id": "arabalar2",
-    "iso": "tr",
-    "baseURL": "http://www.arabalar.com.tr",
-    "selector": "#models .model",
-    "next": "arabalar3",
-    "parent": "arabalar1",
-    "type": 0,
-    "subtype": 1,
-    "queryAttr": ".modelthumb a",
-    "attr": "href"
-  },
-  {
-    "id": "arabalar3",
-    "iso": "tr",
-    "category": "car",
-    "baseURL": "http://www.arabalar.com.tr",
-    "selector": "#0km ul li",
-    "type": 1,
-    "subtype": 1,
-    "next": null,
-    "parent": "arabalar2",
-    "queryText": [
-      {
-        "children": [
-          "a"
-        ],
-        "key": "yearMakeModelFeatures"
-      },
-      {
-        "children": [
-          "span"
-        ],
-        "key": "price"
+        "key": "features"
       }
     ]
   },
@@ -111,6 +72,17 @@
       {
         "children": [
           "div",
+          "div",
+          "div.card-image.vehicle-card-image",
+          "div",
+          "img"
+        ],
+        "key": "imageURL",
+        "out": "attr.src"
+      },
+      {
+        "children": [
+          "div",
           ".vehicle-card",
           ".card-content",
           ".vehicle-card-top",
@@ -119,6 +91,18 @@
           ".vehicle-header-make-model"
         ],
         "key": "makeModel"
+      },
+      {
+        "children": [
+          "div",
+          ".vehicle-card",
+          ".card-content",
+          ".vehicle-card-top",
+          "h3",
+          ".vehicle-card-header",
+          ".vehicle-card-year"
+        ],
+        "key": "year"
       },
       {
         "children": [
@@ -170,6 +154,16 @@
     "parent": "araba1",
     "selector": "table tbody tr",
     "queryText":[
+      {
+        "children": [
+          "td.offer-title-column",
+          "div.photo-container",
+          "a",
+          "img"
+        ],
+        "key": "imageURL",
+        "out": "attr.src"
+      },
       {
         "children":[
           "td.brand",

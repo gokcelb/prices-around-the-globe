@@ -20,25 +20,38 @@ export class ScraperService {
     for (let i = 0; i < data.length; i++) {
       const info: ScrapeInformation = data[i];
       if (iso === null || iso === undefined) {
-        if (info.parent === null && info.subtype === viableScraperType) {
-          ids.push(info.id);
-       }
+        info.parent === null && info.subtype === viableScraperType ? ids.push(info.id) : null;
       } else {
-        if (info.iso.toLowerCase() === iso.toLowerCase() && info.parent === null && info.subtype === viableScraperType) {
-          ids.push(info.id);
-        }
+        info.iso.toLowerCase() === iso.toLowerCase() && info.parent === null && info.subtype === viableScraperType ? ids.push(info.id) : null;
       }
     }
     return ids;
   }
 
-  async scrapeLinked(iso: string | null, currencyFormat: string, query?: string): Promise<object[]> {
-    let viableScraperType: ScraperType;
-    if (query) {
-      viableScraperType = ScraperType.QUERY;
-    } else {
-      viableScraperType = ScraperType.TEXT;
+  protected prepareLinkedForText(scraperInformationList: ScrapeInformation[], link: LinkedScraper): number {
+    let idx = 0;
+    while (idx !== scraperInformationList.length - 1) {
+      let currentScraperInfo = scraperInformationList[idx]
+      const attrScraper = this.scraperFactory.createAttrScraper(currentScraperInfo.baseURL, currentScraperInfo.attr)
+          .select(currentScraperInfo.selector)
+      if (currentScraperInfo.queryAttr) {
+        attrScraper.child(...currentScraperInfo.queryAttr.split(' '));
+      }
+      link.addScraper(attrScraper);
+      idx++;
     }
+
+    const textScraper = this.scraperFactory.createTextScraper(scraperInformationList[idx].baseURL);
+    scraperInformationList[idx].queryText.forEach(branch => {
+      textScraper.branch(branch.children, branch.key, branch.out);
+    })
+    textScraper.select(scraperInformationList[idx].selector);
+    link.addScraper(textScraper);
+    return idx;
+  }
+
+  async scrapeLinked(iso: string | null, category: string | null, currencyFormat: string, query?: string): Promise<object[]> {
+    const viableScraperType = query ? ScraperType.QUERY : ScraperType.TEXT;
     const ids = this.getIdFromIso(iso, viableScraperType);
     const results: object[] = [];
 
@@ -61,30 +74,11 @@ export class ScraperService {
       }
 
       const link = new LinkedScraper();
-      let idx = 0;
-      while (idx !== scraperInformationList.length - 1) {
-        let currentScraperInfo = scraperInformationList[idx]
-        const attrScraper = this.scraperFactory.createAttrScraper(currentScraperInfo.baseURL, currentScraperInfo.attr)
-            .select(currentScraperInfo.selector)
-        if (currentScraperInfo.queryAttr) {
-          attrScraper.child(...currentScraperInfo.queryAttr.split(' '));
-        }
-        link.addScraper(attrScraper)
-        idx++;
-      }
-
-      const textScraper = this.scraperFactory.createTextScraper(scraperInformationList[idx].baseURL);
-      scraperInformationList[idx].queryText.forEach(branch => {
-        textScraper.branch(branch.children, branch.key);
-      })
-      textScraper.select(scraperInformationList[idx].selector);
-      link.addScraper(textScraper);
-
-      const objectFormatter = FormatterFactory.get('object');
+      const idx = this.prepareLinkedForText(scraperInformationList, link);
       await link.exec(0, [], 0);
-
-      const result = link.finalResult.map(f => objectFormatter.format(
-          f, scraperInformationList[idx].iso, currencyFormat, scraperInformationList[idx].category));
+      const objectFormatter = FormatterFactory.get('object');
+      const result = link.finalResult.map(obj => objectFormatter.format(
+          obj, scraperInformationList[idx].iso, currencyFormat, scraperInformationList[idx].category));
       results.push(...result);
     }
     return results;
